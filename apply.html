@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apply — Matchday Workforce</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <header class="site-nav">
+    <div class="nav-inner">
+                    <a class="logo" href="index.html">
+          <img class="logo-shield" src="assets/mls/logo/logo-shield-black.png" alt="MLS" />
+          <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
+          <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
+        </a>
+      <button class="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="departments.html">Departments</a>
+        <a href="work-life.html">Work Life</a>
+        <a href="community.html">Community</a>
+        <a href="about.html">About</a>
+        <a class="nav-jobs" href="jobs.html">Jobs</a>
+      </nav>
+    </div>
+  </header>
+
+<header class="page-header">
+    <div class="container">
+      <p class="section-kicker">Application</p>
+      <h1>Apply for a matchday role</h1>
+      <p id="apply-job-label">Select a role to begin</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="form-shell" id="apply-form">
+      <div class="progress-steps">
+        <div class="step-pill active">Account</div>
+        <div class="step-pill">Eligibility</div>
+        <div class="step-pill">Preferences</div>
+        <div class="step-pill">Experience</div>
+        <div class="step-pill">Review</div>
+      </div>
+
+      <div class="form-step active">
+        <h2 style="font-family:var(--font-display);margin-bottom:1rem">Create your applicant account</h2>
+        <div class="form-grid">
+          <div class="field full">
+            <label for="full-name">Full name</label>
+            <input class="form-control" id="full-name" type="text" placeholder="Alex Rivera" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input class="form-control" id="email" type="email" placeholder="you@email.com" />
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input class="form-control" id="phone" type="tel" placeholder="(555) 000-0000" />
+          </div>
+          <div class="field">
+            <label for="city">City</label>
+            <input class="form-control" id="city" type="text" placeholder="Portland" />
+          </div>
+          <div class="field">
+            <label for="state">State</label>
+            <input class="form-control" id="state" type="text" placeholder="OR" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-step">
+        <h2 style="font-family:var(--font-display);margin-bottom:1rem">Work eligibility</h2>
+        <div class="form-grid">
+          <div class="field full">
+            <label>Are you legally authorized to work in the U.S.?</label>
+            <select class="form-control">
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Will you now or in the future require sponsorship?</label>
+            <select class="form-control">
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Minimum age confirmation</label>
+            <select class="form-control">
+              <option>I am 18 or older</option>
+              <option>I am 16–17</option>
+              <option>Under 16</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Willing to complete a background check?</label>
+            <select class="form-control">
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-step">
+        <h2 style="font-family:var(--font-display);margin-bottom:1rem">Role preferences & availability</h2>
+        <div class="form-grid">
+          <div class="field full">
+            <label>Preferred role categories</label>
+            <div class="check-list" style="margin-top:0.5rem">
+              <label><input type="checkbox" checked /> Guest Services</label>
+              <label><input type="checkbox" /> Concessions</label>
+              <label><input type="checkbox" /> Security</label>
+              <label><input type="checkbox" /> Hospitality / Suites</label>
+              <label><input type="checkbox" /> Parking</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="availability">Matchday availability</label>
+            <textarea class="form-control" id="availability" rows="3" placeholder="Weekends, evenings, specific dates..."></textarea>
+          </div>
+          <div class="field">
+            <label>Max commute</label>
+            <select class="form-control">
+              <option>Within 15 miles</option>
+              <option selected>Within 30 miles</option>
+              <option>Within 50 miles</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Earliest start</label>
+            <input class="form-control" type="date" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-step">
+        <h2 style="font-family:var(--font-display);margin-bottom:1rem">Experience & certifications</h2>
+        <div class="form-grid">
+          <div class="field full">
+            <label for="experience">Relevant experience</label>
+            <textarea class="form-control" id="experience" rows="4" placeholder="Customer service, events, retail, security..."></textarea>
+          </div>
+          <div class="field full">
+            <label>Certifications</label>
+            <div class="check-list" style="margin-top:0.5rem">
+              <label><input type="checkbox" /> Food handler card</label>
+              <label><input type="checkbox" /> First aid / CPR</label>
+              <label><input type="checkbox" /> Security license</label>
+              <label><input type="checkbox" /> ServeSafe or alcohol service</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="resume">Resume upload</label>
+            <input class="form-control" id="resume" type="file" accept=".pdf,.doc,.docx" />
+            <span class="hint">PDF or Word · demo only, file is not uploaded</span>
+          </div>
+          <div class="field full">
+            <label for="screen">Screening: Why do you want to work matchdays?</label>
+            <textarea class="form-control" id="screen" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-step">
+        <h2 style="font-family:var(--font-display);margin-bottom:1rem">Consent & acknowledgement</h2>
+        <div class="form-grid">
+          <div class="field full">
+            <div class="check-list">
+              <label><input type="checkbox" /> I confirm the information provided is accurate.</label>
+              <label><input type="checkbox" /> I consent to being contacted about this role and related stadium openings.</label>
+              <label><input type="checkbox" /> I understand employment is with the listed staffing partner / employer, not Matchday Workforce LLC (unless stated).</label>
+              <label><input type="checkbox" /> I acknowledge background checks may be required after a conditional offer.</label>
+            </div>
+          </div>
+          <div class="field full">
+            <p style="color:var(--muted);font-size:0.9rem">Submitting sends your application to the recruiter for this venue. You’ll track status from your applicant dashboard.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" type="button" id="prev-step">Back</button>
+        <button class="btn btn-primary" type="button" id="next-step">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© 2026 Matchday Workforce LLC</span>
+      <a href="jobs.html">Cancel and return to jobs</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

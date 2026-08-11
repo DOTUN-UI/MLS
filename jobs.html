@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find Jobs — Matchday Workforce</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <header class="site-nav">
+    <div class="nav-inner">
+                    <a class="logo" href="index.html">
+          <img class="logo-shield" src="assets/mls/logo/logo-shield-black.png" alt="MLS" />
+          <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
+          <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
+        </a>
+      <button class="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="departments.html">Departments</a>
+        <a href="work-life.html">Work Life</a>
+        <a href="community.html">Community</a>
+        <a href="about.html">About</a>
+        <a class="nav-jobs active" href="jobs.html">Jobs</a>
+      </nav>
+    </div>
+  </header>
+
+<header class="page-header" style="background-image:url('assets/mls/dept/hero.jpg')">
+    <p class="section-kicker">Jobs</p>
+    <h1>Search jobs</h1>
+    <p>Filter by stadium, city, department, pay, and schedule. Apply online and track every step.</p>
+  </header>
+
+  <div class="container layout-split">
+    <aside class="filter-panel">
+      <h3>Filters</h3>
+      <form id="filters-form">
+        <div class="filter-group">
+          <label for="filter-q">Keywords</label>
+          <input id="filter-q" name="q" type="search" placeholder="Role or stadium" />
+        </div>
+        <div class="filter-group">
+          <label for="filter-city">City</label>
+          <select id="filter-city" name="city">
+            <option value="">Any city</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-stadium">Stadium / club</label>
+          <select id="filter-stadium" name="stadium">
+            <option value="">Any stadium</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-category">Role category</label>
+          <select id="filter-category" name="category">
+            <option value="">Any category</option>
+            <option>Guest Services</option>
+            <option>Security</option>
+            <option>Concessions</option>
+            <option>Parking</option>
+            <option>Hospitality</option>
+            <option>Retail</option>
+            <option>Operations</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-type">Job type</label>
+          <select id="filter-type" name="type">
+            <option value="">Any type</option>
+            <option>Seasonal</option>
+            <option>Event-based</option>
+            <option>Part-time</option>
+            <option>Full-time</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-pay">Min pay ($/hr)</label>
+          <input id="filter-pay" name="payMin" type="number" min="0" step="1" placeholder="e.g. 18" />
+        </div>
+        <div class="filter-group">
+          <label for="filter-status">Hiring status</label>
+          <select id="filter-status" name="status">
+            <option value="">Any status</option>
+            <option>Open</option>
+            <option>Hiring soon</option>
+          </select>
+        </div>
+        <button class="btn btn-secondary" type="button" id="clear-filters" style="width:100%">Clear filters</button>
+      </form>
+    </aside>
+
+    <div>
+      <div class="results-bar">
+        <span id="results-count">0 openings</span>
+        <span>Sorted by soonest deadline</span>
+      </div>
+      <div class="job-grid" id="jobs-list"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© 2026 Matchday Workforce LLC</span>
+      <a href="index.html">Home</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

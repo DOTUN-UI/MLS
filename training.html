@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Training Center — Matchday Workforce</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <header class="site-nav">
+    <div class="nav-inner">
+                    <a class="logo" href="index.html">
+          <img class="logo-shield" src="assets/mls/logo/logo-shield-black.png" alt="MLS" />
+          <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
+          <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
+        </a>
+      <button class="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="departments.html">Departments</a>
+        <a href="work-life.html">Work Life</a>
+        <a href="community.html">Community</a>
+        <a href="about.html">About</a>
+        <a class="nav-jobs" href="jobs.html">Jobs</a>
+      </nav>
+    </div>
+  </header>
+
+<header class="page-header">
+    <div class="container">
+      <p class="section-kicker">Onboarding</p>
+      <h1>Training Center</h1>
+      <p>Stadium orientation, guest service, safety, accessibility, and role-specific lessons — with quizzes and completion tracking.</p>
+    </div>
+  </header>
+
+  <div class="container" style="padding:2rem 0 4rem;max-width:800px">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Overall progress</h2>
+        <span id="overall-label">0% complete</span>
+      </div>
+      <div class="progress-bar" style="height:12px"><span id="overall-progress" style="width:0%"></span></div>
+      <p style="margin-top:0.75rem;color:var(--muted);font-size:0.9rem">Complete required modules before your first matchday assignment.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Your lessons</h2>
+      </div>
+      <div class="course-list" id="course-list"></div>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">What’s covered</h2>
+      <ul style="margin-left:1.1rem;list-style:disc;color:var(--ink-soft)">
+        <li style="margin-bottom:0.4rem">Stadium orientation & reporting procedures</li>
+        <li style="margin-bottom:0.4rem">Guest service basics for high-energy matchdays</li>
+        <li style="margin-bottom:0.4rem">Safety procedures and emergency awareness</li>
+        <li style="margin-bottom:0.4rem">Accessibility training</li>
+        <li style="margin-bottom:0.4rem">Role-specific lessons with short quizzes</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© 2026 Matchday Workforce LLC</span>
+      <a href="worker.html">View matchday assignment →</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

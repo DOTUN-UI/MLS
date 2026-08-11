@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Worker Dashboard — Matchday Workforce</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <header class="site-nav">
+    <div class="nav-inner">
+                    <a class="logo" href="index.html">
+          <img class="logo-shield" src="assets/mls/logo/logo-shield-black.png" alt="MLS" />
+          <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
+          <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
+        </a>
+      <button class="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="departments.html">Departments</a>
+        <a href="work-life.html">Work Life</a>
+        <a href="community.html">Community</a>
+        <a href="about.html">About</a>
+        <a class="nav-jobs" href="jobs.html">Jobs</a>
+      </nav>
+    </div>
+  </header>
+
+<header class="page-header">
+    <div class="container">
+      <p class="section-kicker">Hired · Guest Services</p>
+      <h1>Worker dashboard</h1>
+      <p>Your next match assignment, reporting location, uniform, and check-in instructions.</p>
+    </div>
+  </header>
+
+  <div class="container dash-layout">
+    <aside class="dash-nav">
+      <a class="active" href="worker.html">Next match</a>
+      <a href="training.html">Training</a>
+      <a href="worker.html#uniform">Uniform</a>
+      <a href="worker.html#map">Stadium map</a>
+      <a href="dashboard.html">Applications</a>
+    </aside>
+
+    <div>
+      <div id="worker-assignment"></div>
+
+      <div class="dash-grid">
+        <div class="stat-tile">
+          <div class="label">Shifts this month</div>
+          <div class="value">4</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Training</div>
+          <div class="value">65%</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">On-time check-ins</div>
+          <div class="value">100%</div>
+        </div>
+      </div>
+
+      <div class="panel" id="uniform">
+        <div class="panel-head">
+          <h2>Uniform requirements</h2>
+        </div>
+        <ul style="margin-left:1.1rem;list-style:disc;color:var(--ink-soft)">
+          <li style="margin-bottom:0.4rem">Black Matchday Workforce polo (issued)</li>
+          <li style="margin-bottom:0.4rem">Khaki or black pants — no rips</li>
+          <li style="margin-bottom:0.4rem">Closed-toe black shoes</li>
+          <li style="margin-bottom:0.4rem">Credential visible at all times</li>
+        </ul>
+      </div>
+
+      <div class="panel" id="map">
+        <div class="panel-head">
+          <h2>Stadium map & check-in</h2>
+        </div>
+        <div class="venue-hero" style="min-height:200px;margin:0">
+          <h2 style="font-family:var(--font-display);font-size:1.4rem">Gate D Staff Entrance</h2>
+          <p style="opacity:0.85;margin-top:0.35rem">Scan QR at the staff desk · bring photo ID · arrive 90 min before kickoff</p>
+        </div>
+        <p style="margin-top:1rem;color:var(--muted);font-size:0.9rem">Interactive map placeholder for the prototype. In production this would show walking directions from staff parking Lot C.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© 2026 Matchday Workforce LLC</span>
+      <span>Supervisor: Chris Alvarez · Gate D Lead</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

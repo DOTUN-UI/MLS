@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Applicant Dashboard — Matchday Workforce</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <header class="site-nav">
+    <div class="nav-inner">
+                    <a class="logo" href="index.html">
+          <img class="logo-shield" src="assets/mls/logo/logo-shield-black.png" alt="MLS" />
+          <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
+          <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
+        </a>
+      <button class="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="departments.html">Departments</a>
+        <a href="work-life.html">Work Life</a>
+        <a href="community.html">Community</a>
+        <a href="about.html">About</a>
+        <a class="nav-jobs" href="jobs.html">Jobs</a>
+      </nav>
+    </div>
+  </header>
+
+<header class="page-header">
+    <div class="container">
+      <p class="section-kicker">Applicant dashboard</p>
+      <h1>Welcome back, Alex</h1>
+      <p>Track applications, interviews, documents, and messages from recruiters.</p>
+    </div>
+  </header>
+
+  <div class="container dash-layout">
+    <aside class="dash-nav">
+      <a class="active" href="dashboard.html">Applications</a>
+      <a href="dashboard.html#messages">Messages</a>
+      <a href="dashboard.html#documents">Documents</a>
+      <a href="training.html">Training progress</a>
+      <a href="events.html">Hiring events</a>
+      <a href="worker.html">Worker view (hired)</a>
+    </aside>
+
+    <div>
+      <div class="dash-grid">
+        <div class="stat-tile">
+          <div class="label">Applications</div>
+          <div class="value">3</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Interviews</div>
+          <div class="value">1</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Docs needed</div>
+          <div class="value">1</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Submitted applications</h2>
+          <a class="btn btn-secondary btn-sm" href="jobs.html">Apply to another</a>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Updated</th>
+                <th>Next step</th>
+              </tr>
+            </thead>
+            <tbody id="app-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="messages">
+        <div class="panel-head">
+          <h2>Messages from recruiters</h2>
+        </div>
+        <div class="course-list" id="msg-list"></div>
+      </div>
+
+      <div class="panel" id="documents">
+        <div class="panel-head">
+          <h2>Documents needed</h2>
+        </div>
+        <div class="course-list">
+          <div class="course-item">
+            <div>
+              <strong>Work eligibility (I-9 documents)</strong>
+              <div style="color:var(--muted);font-size:0.88rem;margin-top:0.2rem">Required for Lumen Field parking role</div>
+            </div>
+            <button class="btn btn-primary btn-sm" type="button" onclick="MWApp.showToast('Upload dialog (demo)')">Upload</button>
+          </div>
+          <div class="course-item">
+            <div>
+              <strong>Government photo ID</strong>
+              <div style="color:var(--muted);font-size:0.88rem;margin-top:0.2rem">For hiring day check-in</div>
+            </div>
+            <span class="badge badge-open">On file</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© 2026 Matchday Workforce LLC</span>
+      <a href="training.html">Continue training →</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
