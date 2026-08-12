@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard — Matchday Workforce</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <header class="site-nav">
+    <div class="nav-inner">
+                    <a class="logo" href="index.html">
+          <img class="logo-shield" src="assets/mls/logo/logo-shield-black.png" alt="MLS" />
+          <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
+          <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
+        </a>
+      <button class="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="departments.html">Departments</a>
+        <a href="work-life.html">Work Life</a>
+        <a href="community.html">Community</a>
+        <a href="about.html">About</a>
+        <a class="nav-jobs" href="jobs.html">Jobs</a>
+      </nav>
+    </div>
+  </header>
+
+<header class="page-header">
+    <div class="container">
+      <p class="section-kicker">Recruiter tools</p>
+      <h1>Admin dashboard</h1>
+      <p>Post jobs, review applicants, schedule interviews, message candidates, track training, and assign workers to matches.</p>
+    </div>
+  </header>
+
+  <div class="container dash-layout">
+    <aside class="dash-nav">
+      <a class="active" href="admin.html">Applicants</a>
+      <a href="#jobs" data-admin-action="Jobs manager (demo)">Jobs</a>
+      <a href="#interviews" data-admin-action="Interview scheduler (demo)">Interviews</a>
+      <a href="#messages" data-admin-action="Messaging inbox (demo)">Messages</a>
+      <a href="#onboarding" data-admin-action="Onboarding tracker (demo)">Onboarding</a>
+      <a href="#training" data-admin-action="Training tracker (demo)">Training</a>
+      <a href="#assign" data-admin-action="Match assignment board (demo)">Assign to matches</a>
+    </aside>
+
+    <div>
+      <div class="dash-grid">
+        <div class="stat-tile">
+          <div class="label">Open roles</div>
+          <div class="value">7</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">New applicants</div>
+          <div class="value">24</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">Interviews this week</div>
+          <div class="value">9</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Quick actions</h2>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
+          <button class="btn btn-primary btn-sm" type="button" data-admin-action="Post job form opened">Post job</button>
+          <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Bulk status update ready">Change statuses</button>
+          <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Interview slots opened">Schedule interviews</button>
+          <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Compose message">Send message</button>
+          <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Onboarding checklist">Manage onboarding</button>
+          <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Assign workers to Aug 16">Assign to match</button>
+        </div>
+      </div>
+
+      <div class="panel" id="jobs">
+        <div class="panel-head">
+          <h2>Applicant pipeline</h2>
+          <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Filters applied">Filter</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Applicant</th>
+                <th>Role / stadium</th>
+                <th>Status</th>
+                <th>Applied</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="admin-applicants"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="assign">
+        <div class="panel-head">
+          <h2>Matchday assignments (upcoming)</h2>
+        </div>
+        <div class="job-grid">
+          <div class="job-row" style="cursor:default">
+            <div>
+              <h3>Aug 19 · Providence Park vs San Diego FC</h3>
+              <div class="job-meta">
+                <span>7:30 PM PT · MLS · Apple TV</span>
+                <span>Guest services & suites staffing</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Assignment board for Aug 19 Timbers">Assign</button>
+          </div>
+          <div class="job-row" style="cursor:default">
+            <div>
+              <h3>Aug 15 · BMO Stadium vs San Diego FC</h3>
+              <div class="job-meta">
+                <span>7:30 PM PT · MLS · Apple TV</span>
+                <span>Security & retail coverage</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Assignment board for Aug 15 LAFC">Assign</button>
+          </div>
+          <div class="job-row" style="cursor:default">
+            <div>
+              <h3>Aug 16 · Lumen Field vs Vancouver Whitecaps</h3>
+              <div class="job-meta">
+                <span>7:30 PM PT · MLS · Apple TV</span>
+                <span>Cascadia Cup staffing push</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" type="button" data-admin-action="Assignment board for Aug 16 Sounders">Assign</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© 2026 Matchday Workforce LLC</span>
+      <span>Recruiter mockup · demo data only</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
