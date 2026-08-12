@@ -31,59 +31,68 @@
 
   <div class="container layout-split jobs-layout">
     <aside class="filter-panel">
-      <h3>Filters</h3>
+      <div class="filter-panel-head">
+        <h3>Filters</h3>
+        <p>Narrow matchdays by location and role.</p>
+      </div>
       <form id="filters-form">
-        <div class="filter-group">
-          <label for="filter-city">City</label>
-          <select id="filter-city" name="city">
-            <option value="">Any city</option>
-          </select>
+        <div class="filter-block">
+          <p class="filter-block-label">Location</p>
+          <div class="filter-group">
+            <label for="filter-city">City</label>
+            <select id="filter-city" name="city">
+              <option value="">Any city</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-club">Club</label>
+            <select id="filter-club" name="club">
+              <option value="">Any club</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-stadium">Stadium</label>
+            <select id="filter-stadium" name="stadium">
+              <option value="">Any stadium</option>
+            </select>
+          </div>
         </div>
-        <div class="filter-group">
-          <label for="filter-club">Club</label>
-          <select id="filter-club" name="club">
-            <option value="">Any club</option>
-          </select>
+        <div class="filter-block">
+          <p class="filter-block-label">When &amp; role</p>
+          <div class="filter-group">
+            <label for="filter-month">Month</label>
+            <select id="filter-month" name="month">
+              <option value="">Any month</option>
+              <option value="2026-08">August 2026</option>
+              <option value="2026-09">September 2026</option>
+              <option value="2026-10">October 2026</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-category">Role category</label>
+            <select id="filter-category" name="category">
+              <option value="">Any category</option>
+              <option>Guest Services</option>
+              <option>Ushering</option>
+              <option>Ticket Scanning</option>
+              <option>Bag Check & Screening</option>
+              <option>Security</option>
+              <option>Concessions</option>
+              <option>Bartending</option>
+              <option>Retail / Team Store</option>
+              <option>Hospitality & Suites</option>
+              <option>Club & Premium Experience</option>
+              <option>Parking & Traffic</option>
+              <option>Cleaning & Housekeeping</option>
+              <option>Event Operations</option>
+              <option>Field Operations</option>
+              <option>Medical & First Aid</option>
+              <option>Warehouse & Logistics</option>
+              <option>Box Office / Will Call</option>
+            </select>
+          </div>
         </div>
-        <div class="filter-group">
-          <label for="filter-stadium">Stadium</label>
-          <select id="filter-stadium" name="stadium">
-            <option value="">Any stadium</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="filter-month">Month</label>
-          <select id="filter-month" name="month">
-            <option value="">Any month</option>
-            <option value="2026-08">August 2026</option>
-            <option value="2026-09">September 2026</option>
-            <option value="2026-10">October 2026</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="filter-category">Role category</label>
-          <select id="filter-category" name="category">
-            <option value="">Any category</option>
-            <option>Guest Services</option>
-            <option>Ushering</option>
-            <option>Ticket Scanning</option>
-            <option>Bag Check & Screening</option>
-            <option>Security</option>
-            <option>Concessions</option>
-            <option>Bartending</option>
-            <option>Retail / Team Store</option>
-            <option>Hospitality & Suites</option>
-            <option>Club & Premium Experience</option>
-            <option>Parking & Traffic</option>
-            <option>Cleaning & Housekeeping</option>
-            <option>Event Operations</option>
-            <option>Field Operations</option>
-            <option>Medical & First Aid</option>
-            <option>Warehouse & Logistics</option>
-            <option>Box Office / Will Call</option>
-          </select>
-        </div>
-        <button class="btn btn-secondary" type="button" id="clear-filters" style="width:100%">Clear filters</button>
+        <button class="btn btn-secondary filter-clear" type="button" id="clear-filters">Clear filters</button>
       </form>
     </aside>
 

@@ -72,6 +72,7 @@ const MW = {
   stadiums: [
     {
       id: 'mercedes-benz-stadium',
+      image: 'Stadiums.jpg/Mercedes benz stadium.jpg',
       name: 'Mercedes-Benz Stadium',
       club: 'Atlanta United FC',
       city: 'Atlanta',
@@ -80,6 +81,7 @@ const MW = {
     },
     {
       id: 'bank-of-america-stadium',
+      image: 'Stadiums.jpg/Bank Of America Stadium.jpg',
       name: 'Bank of America Stadium',
       club: 'Charlotte FC',
       city: 'Charlotte',
@@ -88,6 +90,7 @@ const MW = {
     },
     {
       id: 'interco-stadium',
+      image: 'Stadiums.jpg/Inter&Co Stadium.jpg',
       name: 'Inter&Co Stadium',
       club: 'Orlando City SC',
       city: 'Orlando',
@@ -96,6 +99,7 @@ const MW = {
     },
     {
       id: 'stade-saputo',
+      image: 'Stadiums.jpg/Stade Saputo stadium.jpg',
       name: 'Stade Saputo',
       club: 'CF Montréal',
       city: 'Montreal',
@@ -104,6 +108,7 @@ const MW = {
     },
     {
       id: 'bmo-field',
+      image: 'Stadiums.jpg/BMO Field.jpg',
       name: 'BMO Field',
       club: 'Toronto FC',
       city: 'Toronto',
@@ -112,6 +117,7 @@ const MW = {
     },
     {
       id: 'shell-energy-stadium',
+      image: 'Stadiums.jpg/Shell Energy Stadium.webp',
       name: 'Shell Energy Stadium',
       club: 'Houston Dynamo FC',
       city: 'Houston',
@@ -120,6 +126,7 @@ const MW = {
     },
     {
       id: 'geodis-park',
+      image: 'Stadiums.jpg/Geodis Park.jpg',
       name: 'GEODIS Park',
       club: 'Nashville SC',
       city: 'Nashville',
@@ -128,6 +135,7 @@ const MW = {
     },
     {
       id: 'dicks-sporting-goods-park',
+      image: 'Stadiums.jpg/Dick\'s Sporting goods park.jpg',
       name: 'Dick\'s Sporting Goods Park',
       club: 'Colorado Rapids',
       city: 'Commerce City',
@@ -136,6 +144,7 @@ const MW = {
     },
     {
       id: 'america-first-field',
+      image: 'Stadiums.jpg/America First Field.jpg',
       name: 'America First Field',
       club: 'Real Salt Lake',
       city: 'Sandy',
@@ -144,6 +153,7 @@ const MW = {
     },
     {
       id: 'bmo-stadium',
+      image: 'Stadiums.jpg/BMO Stadium.jpg',
       name: 'BMO Stadium',
       club: 'LAFC',
       city: 'Los Angeles',
@@ -152,6 +162,7 @@ const MW = {
     },
     {
       id: 'paypal-park',
+      image: 'Stadiums.jpg/PayPal Park.jpg',
       name: 'PayPal Park',
       club: 'San Jose Earthquakes',
       city: 'San Jose',
@@ -160,6 +171,7 @@ const MW = {
     },
     {
       id: 'soldier-field',
+      image: 'Stadiums.jpg/Soldier field stadium.jpg',
       name: 'Soldier Field',
       club: 'Chicago Fire FC',
       city: 'Chicago',
@@ -168,6 +180,7 @@ const MW = {
     },
     {
       id: 'yankee-stadium',
+      image: 'Stadiums.jpg/Etihad Park.jpg',
       name: 'Yankee Stadium',
       club: 'New York City FC',
       city: 'New York',
@@ -176,6 +189,7 @@ const MW = {
     },
     {
       id: 'q2-stadium',
+      image: 'Stadiums.jpg/Q2 stadium.jpg',
       name: 'Q2 Stadium',
       club: 'Austin FC',
       city: 'Austin',
@@ -184,6 +198,7 @@ const MW = {
     },
     {
       id: 'lumen-field',
+      image: 'Stadiums.jpg/Lumen Field.jpg',
       name: 'Lumen Field',
       club: 'Seattle Sounders FC',
       city: 'Seattle',
@@ -192,6 +207,7 @@ const MW = {
     },
     {
       id: 'tql-stadium',
+      image: 'Stadiums.jpg/TQL Stadium.jpg',
       name: 'TQL Stadium',
       club: 'FC Cincinnati',
       city: 'Cincinnati',
@@ -200,6 +216,7 @@ const MW = {
     },
     {
       id: 'audi-field',
+      image: 'Stadiums.jpg/Audi Stadium.jpg',
       name: 'Audi Field',
       club: 'D.C. United',
       city: 'Washington',
@@ -208,6 +225,7 @@ const MW = {
     },
     {
       id: 'red-bull-arena',
+      image: 'Stadiums.jpg/Red Bull Arena.jpg',
       name: 'Red Bull Arena',
       club: 'New York Red Bulls',
       city: 'Harrison',
@@ -216,6 +234,7 @@ const MW = {
     },
     {
       id: 'subaru-park',
+      image: 'Stadiums.jpg/Subaru Park.jpg',
       name: 'Subaru Park',
       club: 'Philadelphia Union',
       city: 'Chester',
@@ -224,6 +243,7 @@ const MW = {
     },
     {
       id: 'scottsmiracle-gro-field',
+      image: 'Stadiums.jpg/Lower.com Field.jpg',
       name: 'ScottsMiracle-Gro Field',
       club: 'Columbus Crew',
       city: 'Columbus',
@@ -232,6 +252,7 @@ const MW = {
     },
     {
       id: 'childrens-mercy-park',
+      image: 'Stadiums.jpg/Children\'s Mercy Park.jpg',
       name: 'Children\'s Mercy Park',
       club: 'Sporting Kansas City',
       city: 'Kansas City',
@@ -240,6 +261,7 @@ const MW = {
     },
     {
       id: 'allianz-field',
+      image: 'Stadiums.jpg/Allainz field.jpg',
       name: 'Allianz Field',
       club: 'Minnesota United FC',
       city: 'St. Paul',
@@ -248,6 +270,7 @@ const MW = {
     },
     {
       id: 'dignity-health-sports-park',
+      image: 'Stadiums.jpg/Dignity Health Stadium.webp',
       name: 'Dignity Health Sports Park',
       club: 'LA Galaxy',
       city: 'Carson',
@@ -256,6 +279,7 @@ const MW = {
     },
     {
       id: 'providence-park',
+      image: 'Stadiums.jpg/Providence Park.jpg',
       name: 'Providence Park',
       club: 'Portland Timbers',
       city: 'Portland',
@@ -264,6 +288,7 @@ const MW = {
     },
     {
       id: 'bc-place',
+      image: 'Stadiums.jpg/BC Place.jpg',
       name: 'BC Place',
       club: 'Vancouver Whitecaps FC',
       city: 'Vancouver',
@@ -272,6 +297,7 @@ const MW = {
     },
     {
       id: 'chase-stadium',
+      image: 'Stadiums.jpg/Chase Stadium.jpg',
       name: 'Chase Stadium',
       club: 'Inter Miami CF',
       city: 'Fort Lauderdale',
@@ -280,6 +306,7 @@ const MW = {
     },
     {
       id: 'nu-stadium',
+      image: 'Stadiums.jpg/Chase Stadium.jpg',
       name: 'Nu Stadium',
       club: 'Inter Miami CF',
       city: 'Miami',
@@ -288,6 +315,7 @@ const MW = {
     },
     {
       id: 'gillette-stadium',
+      image: 'Stadiums.jpg/Gillete stadium.jpg',
       name: 'Gillette Stadium',
       club: 'New England Revolution',
       city: 'Foxborough',
@@ -296,6 +324,7 @@ const MW = {
     },
     {
       id: 'energizer-park',
+      image: 'Stadiums.jpg/CITYPARK.webp',
       name: 'Energizer Park',
       club: 'St. Louis CITY SC',
       city: 'St. Louis',
@@ -304,6 +333,7 @@ const MW = {
     },
     {
       id: 'snapdragon-stadium',
+      image: 'Stadiums.jpg/Snapdragon Stadium.webp',
       name: 'Snapdragon Stadium',
       club: 'San Diego FC',
       city: 'San Diego',
@@ -312,6 +342,7 @@ const MW = {
     },
     {
       id: 'toyota-stadium',
+      image: 'Stadiums.jpg/Toyota Stadium.jpg',
       name: 'Toyota Stadium',
       club: 'FC Dallas',
       city: 'Frisco',

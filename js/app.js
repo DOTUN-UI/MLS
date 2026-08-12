@@ -24,6 +24,14 @@
     };
   }
 
+  function stadiumImageURL(stadium) {
+    if (!stadium?.image) return '';
+    return stadium.image
+      .split('/')
+      .map((part) => encodeURIComponent(part))
+      .join('/');
+  }
+
   function showToast(message) {
     let el = qs('#toast');
     if (!el) {
@@ -394,8 +402,10 @@
     const fixtureCardHTML = (fx, index) => {
       const s = fx.stadium;
       const md = monthDay(fx.date);
+      const img = stadiumImageURL(s);
       return `
-        <button type="button" class="fixture-card" data-match-id="${fx.id}" style="--i:${index}">
+        <button type="button" class="fixture-card${img ? ' has-photo' : ''}" data-match-id="${fx.id}" style="--i:${index}">
+          ${img ? `<img class="fixture-bg" src="${img}" alt="" loading="lazy" decoding="async" />` : ''}
           <div class="fixture-date">
             <span class="month">${md.month}</span>
             <span class="day">${md.day}</span>
@@ -405,7 +415,7 @@
             <p class="fixture-meta">${fx.time} · ${s.name}, ${s.city}</p>
             <p class="fixture-openings">${fx.openings} roles hiring</p>
           </div>
-          <span class="fixture-cta">View roles</span>
+          <span class="fixture-cta btn btn-primary btn-sm">View roles</span>
         </button>
       `;
     };
@@ -445,13 +455,17 @@
       fixturesView.hidden = true;
       rolesView.hidden = false;
       const md = monthDay(fixture.date);
+      const img = stadiumImageURL(fixture.stadium);
+      matchHero.classList.toggle('has-photo', Boolean(img));
+      matchHero.style.backgroundImage = '';
       matchHero.innerHTML = `
+        ${img ? `<img class="match-hero-bg" src="${img}" alt="" loading="eager" decoding="async" />` : ''}
         <div class="match-hero-date">
           <span class="month">${md.month}</span>
           <span class="day">${md.day}</span>
         </div>
         <div>
-          <p class="match-hero-kicker">Matchday hiring</p>
+          <p class="match-hero-kicker">Matchday hiring · ${fixture.stadium.name}</p>
           <h3>${fixture.home} <span>vs</span> ${fixture.away}</h3>
           <p>${fixture.time} · ${fixture.stadium.name}, ${fixture.stadium.city}</p>
         </div>
@@ -573,8 +587,10 @@
     const jobs = MW.enrichedJobs().filter((j) => j.stadiumId === s.id);
     const events = MW.events.filter((e) => e.stadiumId === s.id);
 
+    const venueImg = stadiumImageURL(s);
     root.innerHTML = `
-      <div class="venue-hero">
+      <div class="venue-hero${venueImg ? ' has-photo' : ''}">
+        ${venueImg ? `<img class="venue-hero-bg" src="${venueImg}" alt="" loading="eager" decoding="async" />` : ''}
         <p class="section-kicker" style="color:rgba(255,255,255,0.75)">${s.club}</p>
         <h1>${s.name}</h1>
         <p style="opacity:0.85;margin-top:0.35rem">${s.city}, ${s.state}${s.capacity ? ` · Capacity ${s.capacity}` : ''}</p>
