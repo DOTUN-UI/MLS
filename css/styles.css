@@ -1096,6 +1096,333 @@ ul { list-style: none; }
 .layout-split:has(> :only-child) {
   grid-template-columns: min(360px, 100%);
 }
+
+.jobs-layout {
+  align-items: start;
+}
+
+.jobs-main {
+  min-width: 0;
+}
+
+.jobs-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 1.35rem;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.jobs-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0.85rem 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s var(--ease);
+}
+
+.jobs-tab.is-active {
+  color: var(--ink-deep);
+}
+
+.jobs-tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: -1px;
+  height: 3px;
+  background: var(--red);
+}
+
+.jobs-panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1.15rem;
+}
+
+.jobs-panel-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 2.5vw, 1.9rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.jobs-panel-sub {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+.results-count {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.fixture-feed,
+.role-feed,
+.club-job-feed {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.fixture-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  text-align: left;
+  padding: 1rem 1.15rem;
+  border: 1px solid #e8e8e8;
+  background:
+    linear-gradient(135deg, rgba(226, 35, 26, 0.04), transparent 42%),
+    var(--white);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  animation: fixture-in 0.45s var(--ease) both;
+  animation-delay: calc(min(var(--i, 0), 12) * 35ms);
+}
+
+.fixture-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.fixture-date {
+  text-align: center;
+  background: var(--paper);
+  padding: 0.65rem 0.4rem;
+}
+
+.fixture-date .month,
+.match-hero-date .month {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.fixture-date .day,
+.match-hero-date .day {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fixture-match {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.fixture-match span,
+.match-hero h3 span {
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0 0.25rem;
+}
+
+.fixture-meta,
+.fixture-openings {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
+.fixture-openings {
+  color: var(--pitch-deep);
+  font-weight: 600;
+}
+
+.fixture-cta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.match-back {
+  appearance: none;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  padding: 0;
+}
+
+.match-back:hover { color: var(--ink); }
+
+.match-hero {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 1.1rem;
+  align-items: center;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  background:
+    linear-gradient(120deg, #111 0%, #1a2e24 55%, #2a1212 100%);
+  color: var(--white);
+  animation: match-hero-in 0.4s var(--ease) both;
+}
+
+.match-hero-date {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 0.5rem;
+}
+
+.match-hero-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 0.35rem;
+}
+
+.match-hero h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  text-transform: uppercase;
+  line-height: 1.15;
+  margin-bottom: 0.35rem;
+}
+
+.match-hero p:last-child {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+}
+
+.role-card,
+.club-job-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid #e8e8e8;
+  background: var(--white);
+  transition: border-color 0.2s, transform 0.2s var(--ease), box-shadow 0.2s;
+}
+
+.role-card:hover,
+.club-job-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.role-card h3,
+.club-job-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.2rem;
+}
+
+.role-card-meta,
+.role-card-slots,
+.club-job-org,
+.club-job-loc,
+.club-job-level {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.role-card-slots {
+  margin-top: 0.2rem;
+  color: var(--pitch-deep);
+  font-weight: 600;
+}
+
+.club-job-card {
+  grid-template-columns: 52px 1fr auto;
+  animation: fixture-in 0.45s var(--ease) both;
+  animation-delay: calc(min(var(--i, 0), 10) * 40ms);
+}
+
+.club-job-mark {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  background: linear-gradient(145deg, #1a1a1a, #0d3d2c);
+}
+
+.club-job-card:nth-child(3n) .club-job-mark {
+  background: linear-gradient(145deg, #111, #3a1515);
+}
+
+.club-job-card:nth-child(3n + 2) .club-job-mark {
+  background: linear-gradient(145deg, #0d3d2c, #1a3a55);
+}
+
+.club-job-org {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.club-job-level {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@keyframes fixture-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes match-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .filter-panel {
   background: var(--paper);
   padding: 1.25rem;
@@ -1838,6 +2165,39 @@ ul { list-style: none; }
   }
 
   .pay { margin-top: 0.35rem; }
+
+  .jobs-panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .fixture-card {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .fixture-cta {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .match-hero {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .role-card,
+  .club-job-card {
+    grid-template-columns: 1fr;
+  }
+
+  .club-job-card {
+    grid-template-columns: 48px 1fr;
+  }
+
+  .role-card .btn,
+  .club-job-card .btn {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
 }
 
 /* Tablet → phone: collapse nav */

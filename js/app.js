@@ -286,21 +286,28 @@
 
   function renderJobsPage() {
     const form = qs('#filters-form');
-    const list = qs('#jobs-list');
-    const count = qs('#results-count');
-    if (!form && !list) return;
+    const fixturesList = qs('#fixtures-list');
+    const clubList = qs('#club-jobs-list');
+    if (!form || (!fixturesList && !clubList)) return;
 
-    const syncFromURL = () => {
-      if (!form) return;
-      ['city', 'club', 'stadium', 'category', 'type', 'status', 'payMin'].forEach((key) => {
-        const el = form.elements[key];
-        if (el && params.get(key)) el.value = params.get(key);
-      });
-    };
-
+    const fixturesView = qs('#fixtures-view');
+    const rolesView = qs('#match-roles-view');
+    const matchHero = qs('#match-hero');
+    const rolesList = qs('#match-roles-list');
+    const fixturesCount = qs('#fixtures-count');
+    const rolesCount = qs('#roles-count');
+    const clubCount = qs('#club-jobs-count');
+    const matchdayPanel = qs('#matchday-panel');
+    const clubPanel = qs('#club-panel');
     const citySel = qs('#filter-city');
     const clubSel = qs('#filter-club');
     const stadiumSel = qs('#filter-stadium');
+
+    let activeTab = params.get('tab') === 'club' ? 'club' : 'matchday';
+    let selectedMatchId = params.get('match') || '';
+
+    const filters = () =>
+      form ? Object.fromEntries(new FormData(form).entries()) : Object.fromEntries(params.entries());
 
     const stadiumsFor = (cityFilter = '', clubFilter = '') =>
       MW.stadiums.filter((s) => {
@@ -318,9 +325,7 @@
         .forEach((club) => {
           clubSel.insertAdjacentHTML('beforeend', `<option value="${club}">${club}</option>`);
         });
-      if ([...clubSel.options].some((o) => o.value === selected)) {
-        clubSel.value = selected;
-      }
+      if ([...clubSel.options].some((o) => o.value === selected)) clubSel.value = selected;
     };
 
     const populateStadiumOptions = (
@@ -336,9 +341,7 @@
         .forEach((s) => {
           stadiumSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}</option>`);
         });
-      if ([...stadiumSel.options].some((o) => o.value === selected)) {
-        stadiumSel.value = selected;
-      }
+      if ([...stadiumSel.options].some((o) => o.value === selected)) stadiumSel.value = selected;
     };
 
     const refreshLocationFilters = () => {
@@ -346,19 +349,173 @@
       populateStadiumOptions();
     };
 
+    const setUrl = () => {
+      const f = filters();
+      const url = new URL(location.href);
+      ['city', 'club', 'stadium', 'month', 'category'].forEach((key) => {
+        if (f[key]) url.searchParams.set(key, f[key]);
+        else url.searchParams.delete(key);
+      });
+      if (activeTab === 'club') url.searchParams.set('tab', 'club');
+      else url.searchParams.delete('tab');
+      if (selectedMatchId && activeTab === 'matchday') url.searchParams.set('match', selectedMatchId);
+      else url.searchParams.delete('match');
+      history.replaceState({}, '', url);
+    };
+
+    const filterFixtures = (f) =>
+      MW.enrichedFixtures().filter((fx) => {
+        const s = fx.stadium;
+        if (!s) return false;
+        if (f.city && s.city !== f.city) return false;
+        if (f.club && s.club !== f.club && fx.home !== f.club && fx.away !== f.club) return false;
+        if (f.stadium && fx.stadiumId !== f.stadium) return false;
+        if (f.month && !fx.date.startsWith(f.month)) return false;
+        return true;
+      });
+
+    const filterClubJobs = (f) =>
+      (MW.clubJobs || []).filter((job) => {
+        if (f.city && job.city !== f.city) return false;
+        if (f.club && job.club !== f.club) return false;
+        if (f.stadium) {
+          const home = MW.stadiums.find((s) => s.id === f.stadium);
+          if (home && job.club !== home.club) return false;
+        }
+        return true;
+      });
+
+    const filterMatchRoles = (f) =>
+      (MW.matchRoles || []).filter((role) => {
+        if (f.category && role.category !== f.category) return false;
+        return true;
+      });
+
+    const fixtureCardHTML = (fx, index) => {
+      const s = fx.stadium;
+      const md = monthDay(fx.date);
+      return `
+        <button type="button" class="fixture-card" data-match-id="${fx.id}" style="--i:${index}">
+          <div class="fixture-date">
+            <span class="month">${md.month}</span>
+            <span class="day">${md.day}</span>
+          </div>
+          <div class="fixture-body">
+            <p class="fixture-match">${fx.home} <span>vs</span> ${fx.away}</p>
+            <p class="fixture-meta">${fx.time} · ${s.name}, ${s.city}</p>
+            <p class="fixture-openings">${fx.openings} roles hiring</p>
+          </div>
+          <span class="fixture-cta">View roles</span>
+        </button>
+      `;
+    };
+
+    const roleCardHTML = (role, fixture) => `
+      <article class="role-card">
+        <div class="role-card-main">
+          <h3>${role.title}</h3>
+          <p class="role-card-meta">${role.category} · ${role.type} · ${fixture.stadium.name}</p>
+          <p class="role-card-slots">${role.slots} spots · ${role.payLabel}</p>
+        </div>
+        <a class="btn btn-primary btn-sm" href="apply.html?match=${encodeURIComponent(fixture.id)}&role=${encodeURIComponent(role.id)}">Apply</a>
+      </article>
+    `;
+
+    const clubJobCardHTML = (job, index) => `
+      <article class="club-job-card" style="--i:${index}">
+        <div class="club-job-mark" aria-hidden="true">${MW.clubInitials(job.club)}</div>
+        <div class="club-job-main">
+          <h3>${job.title}</h3>
+          <p class="club-job-org">${job.club}</p>
+          <p class="club-job-loc">${job.city} · ${job.state}</p>
+          <p class="club-job-level">${job.level || job.type}</p>
+        </div>
+        <a class="btn btn-primary btn-sm" href="apply.html?clubJob=${encodeURIComponent(job.id)}">View</a>
+      </article>
+    `;
+
+    const showMatchRoles = (matchId) => {
+      const fixture = MW.enrichFixture(MW.getFixture(matchId) || {});
+      if (!fixture?.id || !fixture.stadium) {
+        selectedMatchId = '';
+        showFixtures();
+        return;
+      }
+      selectedMatchId = matchId;
+      fixturesView.hidden = true;
+      rolesView.hidden = false;
+      const md = monthDay(fixture.date);
+      matchHero.innerHTML = `
+        <div class="match-hero-date">
+          <span class="month">${md.month}</span>
+          <span class="day">${md.day}</span>
+        </div>
+        <div>
+          <p class="match-hero-kicker">Matchday hiring</p>
+          <h3>${fixture.home} <span>vs</span> ${fixture.away}</h3>
+          <p>${fixture.time} · ${fixture.stadium.name}, ${fixture.stadium.city}</p>
+        </div>
+      `;
+      const roles = filterMatchRoles(filters());
+      rolesCount.textContent = `${roles.length} role${roles.length === 1 ? '' : 's'}`;
+      rolesList.innerHTML = roles.length
+        ? roles.map((r) => roleCardHTML(r, fixture)).join('')
+        : `<div class="empty">No roles in that category for this match. Clear the role filter.</div>`;
+      setUrl();
+      rolesView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const showFixtures = () => {
+      selectedMatchId = '';
+      fixturesView.hidden = false;
+      rolesView.hidden = true;
+      const results = filterFixtures(filters());
+      fixturesCount.textContent = `${results.length} matchday${results.length === 1 ? '' : 's'}`;
+      fixturesList.innerHTML = results.length
+        ? results.map(fixtureCardHTML).join('')
+        : `<div class="empty">No matchdays match those filters.</div>`;
+      setUrl();
+    };
+
+    const showClubJobs = () => {
+      const results = filterClubJobs(filters());
+      clubCount.textContent = `${results.length} role${results.length === 1 ? '' : 's'}`;
+      clubList.innerHTML = results.length
+        ? results.map(clubJobCardHTML).join('')
+        : `<div class="empty">No club roles match those filters.</div>`;
+      setUrl();
+    };
+
+    const setTab = (tab) => {
+      activeTab = tab;
+      qsa('.jobs-tab').forEach((btn) => {
+        const on = btn.dataset.jobsTab === tab;
+        btn.classList.toggle('is-active', on);
+        btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      if (matchdayPanel) {
+        matchdayPanel.hidden = tab !== 'matchday';
+        matchdayPanel.classList.toggle('is-active', tab === 'matchday');
+      }
+      if (clubPanel) {
+        clubPanel.hidden = tab !== 'club';
+        clubPanel.classList.toggle('is-active', tab === 'club');
+      }
+      if (tab === 'club') {
+        selectedMatchId = '';
+        showClubJobs();
+      } else if (selectedMatchId) {
+        showMatchRoles(selectedMatchId);
+      } else {
+        showFixtures();
+      }
+    };
+
     const apply = () => {
       refreshLocationFilters();
-      if (!list && !count) return;
-      const data = form
-        ? Object.fromEntries(new FormData(form).entries())
-        : Object.fromEntries(params.entries());
-      const results = filterJobs(data);
-      if (count) count.textContent = `${results.length} opening${results.length === 1 ? '' : 's'}`;
-      if (list) {
-        list.innerHTML = results.length
-          ? results.map(jobRowHTML).join('')
-          : `<div class="empty">No roles match those filters. Try clearing a few.</div>`;
-      }
+      if (activeTab === 'club') showClubJobs();
+      else if (selectedMatchId) showMatchRoles(selectedMatchId);
+      else showFixtures();
     };
 
     if (citySel && citySel.options.length <= 1) {
@@ -369,20 +526,39 @@
         citySel.insertAdjacentHTML('beforeend', `<optgroup label="${region.label}">${options}</optgroup>`);
       });
     }
+
+    ['city', 'club', 'stadium', 'month', 'category'].forEach((key) => {
+      const el = form.elements[key];
+      if (el && params.get(key)) el.value = params.get(key);
+    });
+
     refreshLocationFilters();
+    setTab(activeTab);
 
-    syncFromURL();
-    apply();
+    form.addEventListener('change', apply);
+    form.addEventListener('input', apply);
+    qs('#clear-filters')?.addEventListener('click', () => {
+      form.reset();
+      selectedMatchId = '';
+      refreshLocationFilters();
+      apply();
+    });
 
-    if (form) {
-      form.addEventListener('input', apply);
-      form.addEventListener('change', apply);
-      qs('#clear-filters')?.addEventListener('click', () => {
-        form.reset();
-        refreshLocationFilters();
-        apply();
-      });
-    }
+    qsa('.jobs-tab').forEach((btn) => {
+      btn.addEventListener('click', () => setTab(btn.dataset.jobsTab));
+    });
+
+    fixturesList.addEventListener('click', (e) => {
+      const card = e.target.closest('[data-match-id]');
+      if (!card) return;
+      showMatchRoles(card.dataset.matchId);
+    });
+
+    qs('#match-back')?.addEventListener('click', () => {
+      selectedMatchId = '';
+      showFixtures();
+      fixturesView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   }
 
   function renderStadiumPage() {
@@ -505,15 +681,42 @@
   function renderApply() {
     const root = qs('#apply-form');
     if (!root) return;
+
+    const matchId = params.get('match');
+    const roleId = params.get('role');
+    const clubJobId = params.get('clubJob');
     const jobId = params.get('job');
-    const raw = (jobId && MW.getJob(jobId)) || MW.jobs[0];
-    if (!raw) {
-      const label = qs('#apply-job-label');
-      if (label) label.textContent = 'No openings available right now';
-      return;
+
+    let applyContext = null;
+    let labelText = 'No openings available right now';
+
+    if (matchId && roleId) {
+      const fixture = MW.getFixture(matchId);
+      const role = MW.getMatchRole(roleId);
+      const stadium = fixture && MW.getStadium(fixture.stadiumId);
+      if (fixture && role && stadium) {
+        applyContext = { kind: 'match', matchId, roleId, title: role.title, stadium: stadium.name };
+        labelText = `${role.title} · ${fixture.home} vs ${fixture.away} · ${stadium.name}`;
+      }
+    } else if (clubJobId) {
+      const clubJob = MW.getClubJob(clubJobId);
+      if (clubJob) {
+        applyContext = { kind: 'club', clubJobId, title: clubJob.title, club: clubJob.club };
+        labelText = `${clubJob.title} · ${clubJob.club}`;
+      }
+    } else if (jobId && MW.getJob(jobId)) {
+      const job = MW.enrichJob(MW.getJob(jobId));
+      applyContext = { kind: 'job', jobId: job.id, title: job.title };
+      labelText = `${job.title} · ${job.stadium.name}`;
+    } else if (MW.jobs[0]) {
+      const job = MW.enrichJob(MW.jobs[0]);
+      applyContext = { kind: 'job', jobId: job.id, title: job.title };
+      labelText = `${job.title} · ${job.stadium.name}`;
     }
-    const job = MW.enrichJob(raw);
-    qs('#apply-job-label') && (qs('#apply-job-label').textContent = `${job.title} · ${job.stadium.name}`);
+
+    const label = qs('#apply-job-label');
+    if (label) label.textContent = labelText;
+    if (!applyContext) return;
 
     let step = 0;
     const steps = qsa('.form-step');
@@ -536,7 +739,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         const draft = {
-          jobId: job.id,
+          ...applyContext,
           submittedAt: new Date().toISOString(),
           name: qs('#full-name')?.value || 'Applicant',
         };

@@ -26,10 +26,10 @@
 <header class="page-header" style="background-image:url('assets/mls/dept/hero.jpg')">
     <p class="section-kicker">Jobs</p>
     <h1>Search jobs</h1>
-    <p>Filter by city, club, stadium, department, pay, and schedule. Apply online and track every step.</p>
+    <p>Pick a matchday to see open roles — or browse club and front-office positions.</p>
   </header>
 
-  <div class="container layout-split">
+  <div class="container layout-split jobs-layout">
     <aside class="filter-panel">
       <h3>Filters</h3>
       <form id="filters-form">
@@ -49,6 +49,15 @@
           <label for="filter-stadium">Stadium</label>
           <select id="filter-stadium" name="stadium">
             <option value="">Any stadium</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-month">Month</label>
+          <select id="filter-month" name="month">
+            <option value="">Any month</option>
+            <option value="2026-08">August 2026</option>
+            <option value="2026-09">September 2026</option>
+            <option value="2026-10">October 2026</option>
           </select>
         </div>
         <div class="filter-group">
@@ -74,31 +83,53 @@
             <option>Box Office / Will Call</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label for="filter-type">Job type</label>
-          <select id="filter-type" name="type">
-            <option value="">Any type</option>
-            <option>Seasonal</option>
-            <option>Event-based</option>
-            <option>Part-time</option>
-            <option>Full-time</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="filter-pay">Min pay ($/hr)</label>
-          <input id="filter-pay" name="payMin" type="number" min="0" step="1" placeholder="e.g. 18" />
-        </div>
-        <div class="filter-group">
-          <label for="filter-status">Hiring status</label>
-          <select id="filter-status" name="status">
-            <option value="">Any status</option>
-            <option>Open</option>
-            <option>Hiring soon</option>
-          </select>
-        </div>
         <button class="btn btn-secondary" type="button" id="clear-filters" style="width:100%">Clear filters</button>
       </form>
     </aside>
+
+    <div class="jobs-main">
+      <div class="jobs-tabs" role="tablist" aria-label="Job type">
+        <button type="button" class="jobs-tab is-active" data-jobs-tab="matchday" role="tab" aria-selected="true">Matchday</button>
+        <button type="button" class="jobs-tab" data-jobs-tab="club" role="tab" aria-selected="false">Club &amp; front office</button>
+      </div>
+
+      <section id="matchday-panel" class="jobs-panel is-active" aria-label="Matchday openings">
+        <div id="fixtures-view">
+          <div class="jobs-panel-head">
+            <div>
+              <h2>Upcoming matchdays</h2>
+              <p class="jobs-panel-sub">Select a fixture to see roles hiring for that night.</p>
+            </div>
+            <p id="fixtures-count" class="results-count"></p>
+          </div>
+          <div id="fixtures-list" class="fixture-feed"></div>
+        </div>
+
+        <div id="match-roles-view" class="match-roles-view" hidden>
+          <button type="button" class="match-back" id="match-back">← All matchdays</button>
+          <div id="match-hero" class="match-hero"></div>
+          <div class="jobs-panel-head">
+            <div>
+              <h2>Open roles for this match</h2>
+              <p class="jobs-panel-sub">Event-based shifts at the home stadium.</p>
+            </div>
+            <p id="roles-count" class="results-count"></p>
+          </div>
+          <div id="match-roles-list" class="role-feed"></div>
+        </div>
+      </section>
+
+      <section id="club-panel" class="jobs-panel" aria-label="Club and front office roles" hidden>
+        <div class="jobs-panel-head">
+          <div>
+            <h2>Club &amp; front office</h2>
+            <p class="jobs-panel-sub">Year-round and part-time club roles — not tied to a single matchday.</p>
+          </div>
+          <p id="club-jobs-count" class="results-count"></p>
+        </div>
+        <div id="club-jobs-list" class="club-job-feed"></div>
+      </section>
+    </div>
   </div>
 
   <footer class="site-footer">
@@ -149,6 +180,7 @@
   </footer>
 
   <script src="js/data.js"></script>
+  <script src="js/fixtures.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -321,6 +321,129 @@ const MW = {
   ],
   jobs: [],
 
+  matchRoles: [
+    { id: 'guest-services', title: 'Guest Services Associate', category: 'Guest Services', type: 'Event-based', payMin: 18, payMax: 21, payLabel: '$18–$21 / hr', slots: 28 },
+    { id: 'ushering', title: 'Matchday Usher', category: 'Ushering', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 32 },
+    { id: 'ticket-scanning', title: 'Ticket Scanner', category: 'Ticket Scanning', type: 'Event-based', payMin: 17, payMax: 19, payLabel: '$17–$19 / hr', slots: 18 },
+    { id: 'bag-check', title: 'Bag Check Associate', category: 'Bag Check & Screening', type: 'Event-based', payMin: 18, payMax: 20, payLabel: '$18–$20 / hr', slots: 16 },
+    { id: 'security', title: 'Event Security Officer', category: 'Security', type: 'Event-based', payMin: 20, payMax: 24, payLabel: '$20–$24 / hr', slots: 22 },
+    { id: 'concessions', title: 'Concessions Team Member', category: 'Concessions', type: 'Event-based', payMin: 16, payMax: 19, payLabel: '$16–$19 / hr', slots: 40 },
+    { id: 'bartending', title: 'Matchday Bartender', category: 'Bartending', type: 'Event-based', payMin: 16, payMax: 22, payLabel: '$16–$22 / hr + tips', slots: 12 },
+    { id: 'retail', title: 'Team Store Associate', category: 'Retail / Team Store', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 14 },
+    { id: 'hospitality', title: 'Suite Attendant', category: 'Hospitality & Suites', type: 'Event-based', payMin: 18, payMax: 22, payLabel: '$18–$22 / hr', slots: 10 },
+    { id: 'premium', title: 'Club Level Host', category: 'Club & Premium Experience', type: 'Event-based', payMin: 19, payMax: 23, payLabel: '$19–$23 / hr', slots: 8 },
+    { id: 'parking', title: 'Parking Attendant', category: 'Parking & Traffic', type: 'Event-based', payMin: 16, payMax: 18, payLabel: '$16–$18 / hr', slots: 20 },
+    { id: 'cleaning', title: 'Event Cleaner', category: 'Cleaning & Housekeeping', type: 'Event-based', payMin: 16, payMax: 18, payLabel: '$16–$18 / hr', slots: 24 },
+    { id: 'event-ops', title: 'Event Operations Crew', category: 'Event Operations', type: 'Event-based', payMin: 18, payMax: 21, payLabel: '$18–$21 / hr', slots: 15 },
+    { id: 'field-ops', title: 'Field Operations Crew', category: 'Field Operations', type: 'Event-based', payMin: 18, payMax: 22, payLabel: '$18–$22 / hr', slots: 6 },
+    { id: 'medical', title: 'First Aid / Medical Support', category: 'Medical & First Aid', type: 'Event-based', payMin: 22, payMax: 28, payLabel: '$22–$28 / hr', slots: 4 },
+    { id: 'warehouse', title: 'Warehouse & Logistics', category: 'Warehouse & Logistics', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 8 },
+    { id: 'box-office', title: 'Box Office / Will Call', category: 'Box Office / Will Call', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 6 },
+  ],
+
+  clubJobs: [
+    {
+      id: 'cj-fire-foundation',
+      title: 'Manager of Programming, Chicago Fire Foundation',
+      club: 'Chicago Fire FC',
+      city: 'Chicago',
+      state: 'IL',
+      type: 'Full-time',
+      level: 'Manager',
+      category: 'Community & Foundation',
+    },
+    {
+      id: 'cj-sj-front-office',
+      title: 'Assistant, Front Office',
+      club: 'San Jose Earthquakes',
+      city: 'San Jose',
+      state: 'CA',
+      type: 'Part-time',
+      level: 'Part Time',
+      category: 'Front Office',
+    },
+    {
+      id: 'cj-sj-ticket-sales',
+      title: 'Manager, Season Ticket Sales',
+      club: 'San Jose Earthquakes',
+      city: 'San Jose',
+      state: 'CA',
+      type: 'Full-time',
+      level: 'Manager',
+      category: 'Ticket Sales',
+    },
+    {
+      id: 'cj-orl-security',
+      title: 'Stadium Operations — Stadium Security Guard',
+      club: 'Orlando City SC',
+      city: 'Orlando',
+      state: 'FL',
+      type: 'Part-time',
+      level: 'Part Time',
+      category: 'Stadium Operations',
+    },
+    {
+      id: 'cj-lafc-partnerships',
+      title: 'Coordinator, Corporate Partnerships',
+      club: 'LAFC',
+      city: 'Los Angeles',
+      state: 'CA',
+      type: 'Full-time',
+      level: 'Coordinator',
+      category: 'Partnerships',
+    },
+    {
+      id: 'cj-atl-marketing',
+      title: 'Specialist, Digital Marketing',
+      club: 'Atlanta United FC',
+      city: 'Atlanta',
+      state: 'GA',
+      type: 'Full-time',
+      level: 'Specialist',
+      category: 'Marketing',
+    },
+    {
+      id: 'cj-sea-guest',
+      title: 'Supervisor, Guest Experience',
+      club: 'Seattle Sounders FC',
+      city: 'Seattle',
+      state: 'WA',
+      type: 'Full-time',
+      level: 'Supervisor',
+      category: 'Guest Experience',
+    },
+    {
+      id: 'cj-mia-retail',
+      title: 'Associate, Retail Operations',
+      club: 'Inter Miami CF',
+      city: 'Fort Lauderdale',
+      state: 'FL',
+      type: 'Part-time',
+      level: 'Part Time',
+      category: 'Retail',
+    },
+    {
+      id: 'cj-clb-hr',
+      title: 'Coordinator, People & Culture',
+      club: 'Columbus Crew',
+      city: 'Columbus',
+      state: 'OH',
+      type: 'Full-time',
+      level: 'Coordinator',
+      category: 'People & Culture',
+    },
+    {
+      id: 'cj-rsl-ops',
+      title: 'Manager, Stadium Operations',
+      club: 'Real Salt Lake',
+      city: 'Sandy',
+      state: 'UT',
+      type: 'Full-time',
+      level: 'Manager',
+      category: 'Stadium Operations',
+    },
+  ],
+
   /* restore:start parked-jobs
   parkedJobs: [
     {
@@ -640,8 +763,26 @@ const MW = {
 
 MW.getStadium = (id) => MW.stadiums.find((s) => s.id === id);
 MW.getJob = (id) => MW.jobs.find((j) => j.id === id);
+MW.getFixture = (id) => (MW.fixtures || []).find((f) => f.id === id);
+MW.getMatchRole = (id) => (MW.matchRoles || []).find((r) => r.id === id);
+MW.getClubJob = (id) => (MW.clubJobs || []).find((j) => j.id === id);
 MW.enrichJob = (job) => {
   const stadium = MW.getStadium(job.stadiumId);
   return { ...job, stadium };
 };
 MW.enrichedJobs = () => MW.jobs.map(MW.enrichJob);
+MW.enrichFixture = (fixture) => {
+  const stadium = MW.getStadium(fixture.stadiumId);
+  return { ...fixture, stadium };
+};
+MW.enrichedFixtures = () => (MW.fixtures || []).map(MW.enrichFixture);
+MW.clubInitials = (name = '') =>
+  name
+    .replace(/FC|SC|CF|United|City|the/gi, '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase() || 'MLS';
