@@ -285,11 +285,10 @@
   }
 
   function renderJobsPage() {
+    const form = qs('#filters-form');
     const list = qs('#jobs-list');
     const count = qs('#results-count');
-    if (!list) return;
-
-    const form = qs('#filters-form');
+    if (!form && !list) return;
 
     const syncFromURL = () => {
       if (!form) return;
@@ -299,33 +298,66 @@
       });
     };
 
-    const apply = () => {
-      populateStadiumOptions(clubSel?.value || '');
-      const data = form
-        ? Object.fromEntries(new FormData(form).entries())
-        : Object.fromEntries(params.entries());
-      const results = filterJobs(data);
-      count && (count.textContent = `${results.length} opening${results.length === 1 ? '' : 's'}`);
-      list.innerHTML = results.length
-        ? results.map(jobRowHTML).join('')
-        : `<div class="empty">No roles match those filters. Try clearing a few.</div>`;
-    };
-
     const citySel = qs('#filter-city');
     const clubSel = qs('#filter-club');
     const stadiumSel = qs('#filter-stadium');
 
-    const populateStadiumOptions = (clubFilter = clubSel?.value || '') => {
+    const stadiumsFor = (cityFilter = '', clubFilter = '') =>
+      MW.stadiums.filter((s) => {
+        if (cityFilter && s.city !== cityFilter) return false;
+        if (clubFilter && s.club !== clubFilter) return false;
+        return true;
+      });
+
+    const populateClubOptions = (cityFilter = citySel?.value || '') => {
+      if (!clubSel) return;
+      const selected = clubSel.value;
+      clubSel.innerHTML = '<option value="">Any club</option>';
+      [...new Set(stadiumsFor(cityFilter).map((s) => s.club))]
+        .sort((a, b) => a.localeCompare(b))
+        .forEach((club) => {
+          clubSel.insertAdjacentHTML('beforeend', `<option value="${club}">${club}</option>`);
+        });
+      if ([...clubSel.options].some((o) => o.value === selected)) {
+        clubSel.value = selected;
+      }
+    };
+
+    const populateStadiumOptions = (
+      cityFilter = citySel?.value || '',
+      clubFilter = clubSel?.value || ''
+    ) => {
       if (!stadiumSel) return;
       const selected = stadiumSel.value;
       stadiumSel.innerHTML = '<option value="">Any stadium</option>';
-      MW.stadiums
-        .filter((s) => !clubFilter || s.club === clubFilter)
+      stadiumsFor(cityFilter, clubFilter)
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
         .forEach((s) => {
           stadiumSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}</option>`);
         });
       if ([...stadiumSel.options].some((o) => o.value === selected)) {
         stadiumSel.value = selected;
+      }
+    };
+
+    const refreshLocationFilters = () => {
+      populateClubOptions();
+      populateStadiumOptions();
+    };
+
+    const apply = () => {
+      refreshLocationFilters();
+      if (!list && !count) return;
+      const data = form
+        ? Object.fromEntries(new FormData(form).entries())
+        : Object.fromEntries(params.entries());
+      const results = filterJobs(data);
+      if (count) count.textContent = `${results.length} opening${results.length === 1 ? '' : 's'}`;
+      if (list) {
+        list.innerHTML = results.length
+          ? results.map(jobRowHTML).join('')
+          : `<div class="empty">No roles match those filters. Try clearing a few.</div>`;
       }
     };
 
@@ -337,12 +369,7 @@
         citySel.insertAdjacentHTML('beforeend', `<optgroup label="${region.label}">${options}</optgroup>`);
       });
     }
-    if (clubSel && clubSel.options.length <= 1) {
-      [...new Set(MW.stadiums.map((s) => s.club))].sort().forEach((club) => {
-        clubSel.insertAdjacentHTML('beforeend', `<option value="${club}">${club}</option>`);
-      });
-    }
-    populateStadiumOptions();
+    refreshLocationFilters();
 
     syncFromURL();
     apply();
@@ -352,6 +379,7 @@
       form.addEventListener('change', apply);
       qs('#clear-filters')?.addEventListener('click', () => {
         form.reset();
+        refreshLocationFilters();
         apply();
       });
     }
