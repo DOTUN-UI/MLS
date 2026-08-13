@@ -431,9 +431,14 @@
       </article>
     `;
 
-    const clubJobCardHTML = (job, index) => `
+    const clubJobCardHTML = (job, index) => {
+      const logo = MW.clubLogo(job.club);
+      const mark = logo
+        ? `<img class="club-job-mark club-job-logo" src="${logo}" alt="${job.club}" loading="lazy" decoding="async" />`
+        : `<div class="club-job-mark" aria-hidden="true">${MW.clubInitials(job.club)}</div>`;
+      return `
       <article class="club-job-card" style="--i:${index}">
-        <div class="club-job-mark" aria-hidden="true">${MW.clubInitials(job.club)}</div>
+        ${mark}
         <div class="club-job-main">
           <h3>${job.title}</h3>
           <p class="club-job-org">${job.club}</p>
@@ -443,6 +448,7 @@
         <a class="btn btn-primary btn-sm" href="apply.html?clubJob=${encodeURIComponent(job.id)}">View</a>
       </article>
     `;
+    };
 
     const showMatchRoles = (matchId) => {
       const fixture = MW.enrichFixture(MW.getFixture(matchId) || {});

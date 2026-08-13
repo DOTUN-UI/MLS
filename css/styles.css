@@ -1424,13 +1424,22 @@ ul { list-style: none; }
   letter-spacing: 0.02em;
   color: var(--white);
   background: linear-gradient(145deg, #1a1a1a, #0d3d2c);
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
-.club-job-card:nth-child(3n) .club-job-mark {
+.club-job-mark.club-job-logo {
+  background: var(--white);
+  border: 1px solid #ececec;
+  padding: 4px;
+  object-fit: contain;
+}
+
+.club-job-card:nth-child(3n) .club-job-mark:not(.club-job-logo) {
   background: linear-gradient(145deg, #111, #3a1515);
 }
 
-.club-job-card:nth-child(3n + 2) .club-job-mark {
+.club-job-card:nth-child(3n + 2) .club-job-mark:not(.club-job-logo) {
   background: linear-gradient(145deg, #0d3d2c, #1a3a55);
 }
 

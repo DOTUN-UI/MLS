@@ -1987,6 +1987,48 @@ MW.enrichFixture = (fixture) => {
   return { ...fixture, stadium };
 };
 MW.enrichedFixtures = () => (MW.fixtures || []).map(MW.enrichFixture);
+MW.clubLogos = {
+  'Atlanta United FC': 'assets/clubLogo/AtlantaUnitedFC.png',
+  'Austin FC': 'assets/clubLogo/AustinFC.png',
+  'CF Montréal': 'assets/clubLogo/CFMontr\u00e9al.png',
+  'Charlotte FC': 'assets/clubLogo/CharlotteFC.png',
+  'Chicago Fire FC': 'assets/clubLogo/ChicagoFireFC.png',
+  'Colorado Rapids': 'assets/clubLogo/ColoradoRapids.png',
+  'Columbus Crew': 'assets/clubLogo/ColumbusCrew.png',
+  'D.C. United': 'assets/clubLogo/D.C.United.png',
+  'FC Cincinnati': 'assets/clubLogo/FCCincinnati.png',
+  'FC Dallas': 'assets/clubLogo/FCDallas.png',
+  'Houston Dynamo FC': 'assets/clubLogo/HoustonDynamoFC.png',
+  'Inter Miami CF': 'assets/clubLogo/InterMiamiCF.png',
+  'LA Galaxy': 'assets/clubLogo/LAGalaxy.png',
+  'LAFC': 'assets/clubLogo/LAFC.png',
+  'Minnesota United FC': 'assets/clubLogo/MinnesotaUnitedFC.png',
+  'Nashville SC': 'assets/clubLogo/NashvilleSC.png',
+  'New England Revolution': 'assets/clubLogo/NewEnglandRevolution.png',
+  'New York City FC': 'assets/clubLogo/NewYorkCityFC.png',
+  'New York Red Bulls': 'assets/clubLogo/NewYorkRedBulls.png',
+  'Orlando City SC': 'assets/clubLogo/OrlandoCitySC.png',
+  'Philadelphia Union': 'assets/clubLogo/PhiladelphiaUnion.png',
+  'Portland Timbers': 'assets/clubLogo/PortlandTimbers.png',
+  'Real Salt Lake': 'assets/clubLogo/RealSaltLake.png',
+  'San Diego FC': 'assets/clubLogo/SanDiegoFC.png',
+  'San Jose Earthquakes': 'assets/clubLogo/SanJose.png',
+  'Seattle Sounders FC': 'assets/clubLogo/SeattleSoundersFC.png',
+  'Sporting Kansas City': 'assets/clubLogo/SportingKansasCity.png',
+  'St. Louis CITY SC': 'assets/clubLogo/St.LouisCITYSC.png',
+  'Toronto FC': 'assets/clubLogo/TorontoFC.png',
+  'Vancouver Whitecaps FC': 'assets/clubLogo/VancouverWhitecapsFC.png',
+};
+
+MW.clubLogo = (name = '') => {
+  const path = MW.clubLogos[name];
+  if (!path) return '';
+  return path
+    .split('/')
+    .map((part) => encodeURIComponent(part))
+    .join('/');
+};
+
 MW.clubInitials = (name = '') =>
   name
     .replace(/FC|SC|CF|United|City|the/gi, '')
