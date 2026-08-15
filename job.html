@@ -3,78 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Job Detail — Matchday Workforce</title>
+  <title>Role details — Matchday Workforce</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
-    <header class="site-nav">
-    <div class="nav-inner">
-                    <a class="logo" href="index.html">
-          <img class="logo-shield" src="assets/mls/logo/logo-shield-color.png" alt="MLS" />
-          <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
-          <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
-        </a>
-      <button class="nav-toggle" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a class="nav-jobs" href="jobs.html">Jobs</a>
-      </nav>
-    </div>
+<body class="flow-page" data-page="job">
+  <header class="flow-header">
+    <button type="button" class="flow-back" id="flow-back" aria-label="Go back">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Back</span>
+    </button>
+    <a class="logo flow-logo" href="index.html">
+      <img class="logo-shield" src="assets/mls/logo/logo-shield-color.png" alt="MLS" />
+      <img class="logo-sep-img" src="assets/mls/logo/logo-separator-black.png" alt="" />
+      <img class="logo-wordmark" src="assets/mls/logo/logo-text-black.png" alt="Careers" />
+    </a>
+    <span class="flow-header-spacer" aria-hidden="true"></span>
   </header>
 
-<div class="container" style="padding:2rem 0 1rem">
-    <div id="job-page"></div>
-  </div>
+  <main class="flow-main">
+    <div class="container flow-container" id="job-page">
+      <p class="flow-loading">Loading role...</p>
+    </div>
+  </main>
 
-  <footer class="site-footer">
-    <div class="footer-brand">
-      <a class="logo" href="index.html">
-        <img class="logo-shield" src="assets/mls/logo/logo-shield-color.png" alt="MLS" />
-        <img class="logo-sep-img" src="assets/mls/logo/logo-separator.png" alt="" />
-        <img class="logo-wordmark" src="assets/mls/logo/logo-text.png" alt="Careers" />
-      </a>
-      <img class="footer-leagues" src="assets/mls/logo/footer-leagues.png" alt="MLS Next Pro, MLS Next, MLS Go, and Leagues Cup" />
-    </div>
-        <div class="footer-social">
-      <p class="footer-social-label">Follow us</p>
-      <div class="footer-social-links">
-        <a href="https://www.instagram.com/mls/" target="_blank" rel="noopener noreferrer" aria-label="MLS on Instagram">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm11.25 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
-        </a>
-        <a href="https://www.facebook.com/MLS" target="_blank" rel="noopener noreferrer" aria-label="MLS on Facebook">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h2.6l.4-3H13v-2c0-.6.4-1 1-1z"/></svg>
-        </a>
-        <a href="https://www.linkedin.com/company/major-league-soccer" target="_blank" rel="noopener noreferrer" aria-label="MLS on LinkedIn">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 9H3.7v11.2h2.8V9zM5.1 3.8C4.1 3.8 3.3 4.6 3.3 5.6s.8 1.8 1.8 1.8 1.8-.8 1.8-1.8-.8-1.8-1.8-1.8zM20.3 13.1c0-3.1-1.7-4.6-3.9-4.6-1.8 0-2.6 1-3.1 1.7V9H10.5c0 1.9 0 11.2 0 11.2h2.8v-6.3c0-.3 0-.7.1-1 .3-.7.9-1.5 2-1.5 1.4 0 2 1.1 2 2.6v6.2h2.8V13.1z"/></svg>
-        </a>
-        <a href="https://x.com/MLS" target="_blank" rel="noopener noreferrer" aria-label="MLS on X">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-      </div>
-    </div>
-    <div class="footer-legal">
-      <p>Major League Soccer and Soccer United Marketing are proud to be equal opportunity employers. We welcome all candidates without regard to race, color, creed, national origin, religion, sex, age, disability, sexual orientation, marital status, veteran status or any other characteristic protected by applicable city, state or federal law.</p>
-      <p>Whether you are a veteran or a current service member, the sacrifices you’ve made for our country demonstrate your level of commitment, resourcefulness and integrity—invaluable characteristics we seek in new talent.</p>
-      <div class="footer-policy">
-        <a class="footer-policy-logo" href="index.html" aria-label="MLS Careers home">
-          <img class="footer-policy-shield" src="assets/mls/logo/logo-shield-color.png" alt="MLS" />
-        </a>
-        <nav class="footer-policy-links" aria-label="Legal">
-          <a href="terms.html">Terms of Service</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="do-not-sell.html">Do Not Sell or Share My Personal Information</a>
-          <a href="preferences.html">Manage Preferences</a>
-        </nav>
-      </div>
-      <div class="footer-bottom">
-        <span>© 2026 Matchday Workforce LLC</span>
-        <a href="jobs.html">Back to jobs</a>
-      </div>
-    </div>
+  <footer class="flow-footer">
+    <nav aria-label="Legal">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </nav>
   </footer>
 
   <script src="js/data.js"></script>
+  <script src="js/fixtures.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

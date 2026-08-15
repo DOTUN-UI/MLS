@@ -29,15 +29,24 @@
     <p>Pick a matchday to see open roles — or browse club and front-office positions.</p>
   </header>
 
-  <div class="container layout-split jobs-layout">
-    <aside class="filter-panel">
-      <div class="filter-panel-head">
-        <h3>Filters</h3>
-        <p>Narrow matchdays by location and role.</p>
+  <div class="container jobs-layout">
+    <aside class="filter-panel is-collapsed" id="filter-panel">
+      <div class="filter-bar">
+        <button type="button" class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filters-form">
+          <span class="filter-toggle-icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 20 20" class="filter-funnel"><path d="M3 5h14l-5.2 6.1V15l-3.6 2v-5.9L3 5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="filter-toggle-copy">
+            <span class="filter-toggle-label">Filters</span>
+            <span class="filter-toggle-hint">City, club, stadium, month, role</span>
+          </span>
+          <span class="filter-active-count" id="filter-active-count" hidden>0</span>
+          <svg class="filter-toggle-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6.5 8 10.5 12 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="filter-clear-inline" id="clear-filters">Clear all</button>
       </div>
-      <form id="filters-form">
-        <div class="filter-block">
-          <p class="filter-block-label">Location</p>
+      <form id="filters-form" class="filter-drawer">
+        <div class="filter-grid">
           <div class="filter-group">
             <label for="filter-city">City</label>
             <select id="filter-city" name="city">
@@ -56,9 +65,6 @@
               <option value="">Any stadium</option>
             </select>
           </div>
-        </div>
-        <div class="filter-block">
-          <p class="filter-block-label">When &amp; role</p>
           <div class="filter-group">
             <label for="filter-month">Month</label>
             <select id="filter-month" name="month">
@@ -68,7 +74,7 @@
               <option value="2026-10">October 2026</option>
             </select>
           </div>
-          <div class="filter-group">
+          <div class="filter-group filter-group-wide">
             <label for="filter-category">Role category</label>
             <select id="filter-category" name="category">
               <option value="">Any category</option>
@@ -92,7 +98,6 @@
             </select>
           </div>
         </div>
-        <button class="btn btn-secondary filter-clear" type="button" id="clear-filters">Clear filters</button>
       </form>
     </aside>
 

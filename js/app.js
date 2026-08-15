@@ -310,12 +310,37 @@
     const citySel = qs('#filter-city');
     const clubSel = qs('#filter-club');
     const stadiumSel = qs('#filter-stadium');
+    const filterPanel = qs('#filter-panel');
+    const filterToggle = qs('#filter-toggle');
+    const filterCount = qs('#filter-active-count');
+    const clearBtn = qs('#clear-filters');
 
     let activeTab = params.get('tab') === 'club' ? 'club' : 'matchday';
     let selectedMatchId = params.get('match') || '';
 
     const filters = () =>
       form ? Object.fromEntries(new FormData(form).entries()) : Object.fromEntries(params.entries());
+
+    const activeFilterCount = () =>
+      ['city', 'club', 'stadium', 'month', 'category'].reduce((n, key) => {
+        const el = form.elements[key];
+        return n + (el && el.value ? 1 : 0);
+      }, 0);
+
+    const syncFilterChrome = () => {
+      const n = activeFilterCount();
+      if (filterCount) {
+        filterCount.textContent = String(n);
+        filterCount.hidden = n === 0;
+      }
+      if (clearBtn) clearBtn.disabled = n === 0;
+      if (filterToggle) {
+        filterToggle.setAttribute(
+          'aria-expanded',
+          filterPanel && !filterPanel.classList.contains('is-collapsed') ? 'true' : 'false'
+        );
+      }
+    };
 
     const stadiumsFor = (cityFilter = '', clubFilter = '') =>
       MW.stadiums.filter((s) => {
@@ -427,7 +452,7 @@
           <p class="role-card-meta">${role.category} · ${role.type} · ${fixture.stadium.name}</p>
           <p class="role-card-slots">${role.slots} spots · ${role.payLabel}</p>
         </div>
-        <a class="btn btn-primary btn-sm" href="apply.html?match=${encodeURIComponent(fixture.id)}&role=${encodeURIComponent(role.id)}">Apply</a>
+        <a class="btn btn-primary btn-sm" href="job.html?match=${encodeURIComponent(fixture.id)}&role=${encodeURIComponent(role.id)}">View</a>
       </article>
     `;
 
@@ -445,7 +470,10 @@
           <p class="club-job-loc">${job.city} · ${job.state}</p>
           <p class="club-job-level">${job.level || job.type}</p>
         </div>
-        <a class="btn btn-primary btn-sm" href="apply.html?clubJob=${encodeURIComponent(job.id)}">View</a>
+        <a class="club-job-view" href="job.html?clubJob=${encodeURIComponent(job.id)}">
+          <span>View</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </article>
     `;
     };
@@ -533,6 +561,7 @@
 
     const apply = () => {
       refreshLocationFilters();
+      syncFilterChrome();
       if (activeTab === 'club') showClubJobs();
       else if (selectedMatchId) showMatchRoles(selectedMatchId);
       else showFixtures();
@@ -552,12 +581,22 @@
       if (el && params.get(key)) el.value = params.get(key);
     });
 
+    if (activeFilterCount() > 0 && filterPanel) {
+      filterPanel.classList.remove('is-collapsed');
+    }
+
     refreshLocationFilters();
     setTab(activeTab);
+    syncFilterChrome();
+
+    filterToggle?.addEventListener('click', () => {
+      filterPanel?.classList.toggle('is-collapsed');
+      syncFilterChrome();
+    });
 
     form.addEventListener('change', apply);
     form.addEventListener('input', apply);
-    qs('#clear-filters')?.addEventListener('click', () => {
+    clearBtn?.addEventListener('click', () => {
       form.reset();
       selectedMatchId = '';
       refreshLocationFilters();
@@ -646,139 +685,361 @@
     `;
   }
 
-  function renderJobPage() {
-    const root = qs('#job-page');
-    if (!root) return;
-    const id = params.get('id');
-    const raw = (id && MW.getJob(id)) || MW.jobs[0];
-    if (!raw) {
-      root.innerHTML = `<div class="empty">No openings are listed right now. <a href="jobs.html">Back to jobs</a></div>`;
-      return;
-    }
-    const job = MW.enrichJob(raw);
-    const s = job.stadium;
-
-    root.innerHTML = `
-      <div class="breadcrumbs">
-        <a href="index.html">Home</a> / <a href="jobs.html">Jobs</a> /
-        <a href="stadium.html?id=${s.id}">${s.name}</a> / <span>${job.title}</span>
-      </div>
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem">
-        <span class="badge badge-open">${job.status}</span>
-        <span class="badge badge-status">${job.type}</span>
-        ${job.urgent ? '<span class="badge badge-urgent">Urgent hire</span>' : ''}
-      </div>
-      <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-0.02em">${job.title}</h1>
-      <p style="color:var(--muted);margin-top:0.4rem">${s.name} · ${s.city}, ${s.state} · ${s.club}</p>
-      <div class="detail-layout">
-        <div class="detail-main">
-          <h2>About the role</h2>
-          <p>${job.description}</p>
-          <h2>Responsibilities</h2>
-          <ul>${job.responsibilities.map((r) => `<li>${r}</li>`).join('')}</ul>
-          <h2>Qualifications</h2>
-          <ul>${job.qualifications.map((r) => `<li>${r}</li>`).join('')}</ul>
-          <h2>Physical requirements</h2>
-          <p>${job.physical}</p>
-          <h2>Background check</h2>
-          <p>${job.background}</p>
-        </div>
-        <aside class="side-panel">
-          <div class="label" style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted)">Pay range</div>
-          <div class="pay-lg">${job.payLabel}</div>
-          <div class="meta-stack">
-            <div class="meta-row"><span>Category</span><span>${job.category}</span></div>
-            <div class="meta-row"><span>Schedule</span><span>${job.schedule}</span></div>
-            <div class="meta-row"><span>Minimum age</span><span>${job.minAge}+</span></div>
-            <div class="meta-row"><span>Deadline</span><span>${formatDate(job.deadline)}</span></div>
-            <div class="meta-row"><span>Employer partner</span><span>${s.partner}</span></div>
-          </div>
-          <a class="btn btn-primary" style="width:100%;margin-bottom:0.5rem" href="apply.html?job=${job.id}">Apply now</a>
-          <a class="btn btn-secondary" style="width:100%" href="stadium.html?id=${s.id}">View stadium</a>
-        </aside>
-      </div>
-    `;
-  }
-
-  function renderApply() {
-    const root = qs('#apply-form');
-    if (!root) return;
-
+  function resolveOpening() {
     const matchId = params.get('match');
     const roleId = params.get('role');
     const clubJobId = params.get('clubJob');
-    const jobId = params.get('job');
-
-    let applyContext = null;
-    let labelText = 'No openings available right now';
+    const jobId = params.get('job') || params.get('id');
 
     if (matchId && roleId) {
       const fixture = MW.getFixture(matchId);
       const role = MW.getMatchRole(roleId);
       const stadium = fixture && MW.getStadium(fixture.stadiumId);
       if (fixture && role && stadium) {
-        applyContext = { kind: 'match', matchId, roleId, title: role.title, stadium: stadium.name };
-        labelText = `${role.title} · ${fixture.home} vs ${fixture.away} · ${stadium.name}`;
+        const qs = `match=${encodeURIComponent(matchId)}&role=${encodeURIComponent(roleId)}`;
+        return {
+          kind: 'match',
+          matchId,
+          roleId,
+          title: role.title,
+          eyebrow: 'Matchday role',
+          summary: `${fixture.home} vs ${fixture.away}`,
+          club: stadium.club,
+          location: `${stadium.name}, ${stadium.city}, ${stadium.state}`,
+          category: role.category,
+          type: role.type,
+          pay: role.payLabel,
+          slots: `${role.slots} spots open`,
+          when: `${formatDate(fixture.date)} · ${fixture.time}`,
+          applyHref: `apply.html?${qs}`,
+          detailHref: `job.html?${qs}`,
+          backHref: `jobs.html?match=${encodeURIComponent(matchId)}`,
+          description:
+            `Help deliver a great fan experience for ${fixture.home} vs ${fixture.away} at ${stadium.name}. This is an event-based matchday role with the home club staffing team.`,
+          responsibilities: [
+            'Arrive on time for pre-match briefing and assigned post',
+            'Support guests with a professional, fan-first attitude',
+            'Follow venue safety and operations procedures',
+            'Stay flexible as matchday needs shift through the event',
+          ],
+          qualifications: [
+            'Reliable communication and customer service skills',
+            'Ability to stand and move for extended periods',
+            'Available for the full matchday shift window',
+            'Prior stadium, retail, hospitality, or event experience is a plus',
+          ],
+        };
       }
-    } else if (clubJobId) {
-      const clubJob = MW.getClubJob(clubJobId);
-      if (clubJob) {
-        applyContext = { kind: 'club', clubJobId, title: clubJob.title, club: clubJob.club };
-        labelText = `${clubJob.title} · ${clubJob.club}`;
-      }
-    } else if (jobId && MW.getJob(jobId)) {
-      const job = MW.enrichJob(MW.getJob(jobId));
-      applyContext = { kind: 'job', jobId: job.id, title: job.title };
-      labelText = `${job.title} · ${job.stadium.name}`;
-    } else if (MW.jobs[0]) {
-      const job = MW.enrichJob(MW.jobs[0]);
-      applyContext = { kind: 'job', jobId: job.id, title: job.title };
-      labelText = `${job.title} · ${job.stadium.name}`;
     }
 
-    const label = qs('#apply-job-label');
-    if (label) label.textContent = labelText;
-    if (!applyContext) return;
-
-    let step = 0;
-    const steps = qsa('.form-step');
-    const pills = qsa('.step-pill');
-
-    const show = () => {
-      steps.forEach((s, i) => s.classList.toggle('active', i === step));
-      pills.forEach((p, i) => {
-        p.classList.toggle('active', i === step);
-        p.classList.toggle('done', i < step);
-      });
-      qs('#prev-step').style.visibility = step === 0 ? 'hidden' : 'visible';
-      qs('#next-step').textContent = step === steps.length - 1 ? 'Submit application' : 'Continue';
-    };
-
-    qs('#next-step')?.addEventListener('click', () => {
-      if (step < steps.length - 1) {
-        step += 1;
-        show();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        const draft = {
-          ...applyContext,
-          submittedAt: new Date().toISOString(),
-          name: qs('#full-name')?.value || 'Applicant',
+    if (clubJobId) {
+      const clubJob = MW.getClubJob(clubJobId);
+      if (clubJob) {
+        const qs = `clubJob=${encodeURIComponent(clubJobId)}`;
+        return {
+          kind: 'club',
+          clubJobId,
+          title: clubJob.title,
+          eyebrow: 'Club & front office',
+          summary: clubJob.club,
+          club: clubJob.club,
+          location: `${clubJob.city}, ${clubJob.state}`,
+          category: clubJob.category,
+          type: clubJob.type,
+          level: clubJob.level,
+          pay: clubJob.type === 'Part-time' ? 'Part-time · competitive hourly' : 'Full-time · competitive salary',
+          slots: clubJob.level || clubJob.type,
+          when: 'Hiring now',
+          applyHref: `apply.html?${qs}`,
+          detailHref: `job.html?${qs}`,
+          backHref: 'jobs.html?tab=club',
+          description:
+            `Join ${clubJob.club} in a ${clubJob.category.toLowerCase()} role. This opening supports day-to-day club operations and is not limited to a single matchday.`,
+          responsibilities: [
+            'Own core responsibilities for this department with clear follow-through',
+            'Collaborate across club teams and external partners as needed',
+            'Represent the club professionally with fans, staff, and stakeholders',
+            'Support matchday or event needs when the role requires it',
+          ],
+          qualifications: [
+            'Relevant experience for this role level and department',
+            'Strong written and verbal communication',
+            'Organized, deadline-driven, and comfortable in a team environment',
+            'Passion for soccer and live event culture is a plus',
+          ],
         };
-        localStorage.setItem('mw_last_application', JSON.stringify(draft));
-        showToast('Application submitted. We’ll be in touch by email.');
-        setTimeout(() => (location.href = 'jobs.html'), 1200);
       }
-    });
+    }
 
-    qs('#prev-step')?.addEventListener('click', () => {
-      if (step > 0) {
-        step -= 1;
-        show();
+    if (jobId && MW.getJob(jobId)) {
+      const job = MW.enrichJob(MW.getJob(jobId));
+      const qs = `job=${encodeURIComponent(job.id)}`;
+      return {
+        kind: 'job',
+        jobId: job.id,
+        title: job.title,
+        eyebrow: 'Open role',
+        summary: job.stadium.club,
+        club: job.stadium.club,
+        location: `${job.stadium.name}, ${job.stadium.city}, ${job.stadium.state}`,
+        category: job.category,
+        type: job.type,
+        pay: job.payLabel,
+        slots: job.status,
+        when: `Apply by ${formatDate(job.deadline)}`,
+        applyHref: `apply.html?${qs}`,
+        detailHref: `job.html?${qs}`,
+        backHref: 'jobs.html',
+        description: job.description,
+        responsibilities: job.responsibilities || [],
+        qualifications: job.qualifications || [],
+      };
+    }
+
+    return null;
+  }
+
+  function initFlowBack(fallbackHref) {
+    const btn = qs('#flow-back');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
       }
+      location.href = fallbackHref || 'jobs.html';
     });
+  }
 
-    show();
+  function renderJobPage() {
+    const root = qs('#job-page');
+    if (!root) return;
+
+    const opening = resolveOpening();
+    initFlowBack(opening?.backHref || 'jobs.html');
+
+    if (!opening) {
+      root.innerHTML = `
+        <div class="apply-panel apply-panel--message">
+          <h1 class="apply-panel__title">Role not found</h1>
+          <p class="apply-panel__text">That opening is no longer available or the link is incomplete.</p>
+          <a class="btn btn-primary" href="jobs.html">Back to jobs</a>
+        </div>`;
+      return;
+    }
+
+    document.title = `${opening.title} — Matchday Workforce`;
+    root.innerHTML = `
+      <article class="role-detail">
+        <header class="role-detail__header">
+          <p class="role-detail__eyebrow">${opening.eyebrow}</p>
+          <h1 class="role-detail__title">${opening.title}</h1>
+          <p class="role-detail__summary">${opening.summary}</p>
+          ${opening.slots ? `<p class="role-detail__slots">${opening.slots}</p>` : ''}
+        </header>
+
+        <div class="role-detail__meta">
+          <div class="role-detail__meta-item"><span>Club</span><strong>${opening.club}</strong></div>
+          <div class="role-detail__meta-item"><span>Location</span><strong>${opening.location}</strong></div>
+          <div class="role-detail__meta-item"><span>Category</span><strong>${opening.category}</strong></div>
+          <div class="role-detail__meta-item"><span>Type</span><strong>${opening.type || opening.level || ''}</strong></div>
+          <div class="role-detail__meta-item"><span>Pay</span><strong>${opening.pay}</strong></div>
+          <div class="role-detail__meta-item"><span>Timing</span><strong>${opening.when}</strong></div>
+        </div>
+
+        <section class="role-detail__section">
+          <h2>About the role</h2>
+          <p>${opening.description}</p>
+        </section>
+        <section class="role-detail__section">
+          <h2>Responsibilities</h2>
+          <ul>${opening.responsibilities.map((item) => `<li>${item}</li>`).join('')}</ul>
+        </section>
+        <section class="role-detail__section">
+          <h2>Qualifications</h2>
+          <ul>${opening.qualifications.map((item) => `<li>${item}</li>`).join('')}</ul>
+        </section>
+      </article>
+      <a class="floating-cta btn btn-primary" id="job-apply-floating" href="${opening.applyHref}">Apply now</a>
+    `;
+  }
+
+  function renderApply() {
+    const root = qs('#apply-content');
+    if (!root) return;
+
+    const opening = resolveOpening();
+    initFlowBack(opening?.detailHref || opening?.backHref || 'jobs.html');
+
+    if (!opening) {
+      root.innerHTML = `
+        <div class="apply-shell apply-shell--single">
+          <div class="apply-panel apply-panel--message">
+            <h1 class="apply-panel__title">Unable to apply</h1>
+            <p class="apply-panel__text">Choose a role from Jobs first, then continue to the application form.</p>
+            <a class="btn btn-primary" href="jobs.html">Back to jobs</a>
+          </div>
+        </div>`;
+      return;
+    }
+
+    document.title = `Apply: ${opening.title} — Matchday Workforce`;
+
+    const metaRows = [
+      ['Club', opening.club],
+      ['Location', opening.location],
+      ['Category', opening.category],
+      ['Type', opening.type || opening.level],
+      ['Pay', opening.pay],
+      ['Timing', opening.when],
+      opening.slots ? ['Availability', opening.slots] : null,
+    ]
+      .filter(Boolean)
+      .map(
+        ([label, value]) => `
+        <div class="apply-sidebar__item">
+          <dt class="apply-sidebar__label">${label}</dt>
+          <dd class="apply-sidebar__value">${value}</dd>
+        </div>`
+      )
+      .join('');
+
+    root.innerHTML = `
+      <div class="apply-shell">
+        <aside class="apply-sidebar" aria-label="Role summary">
+          <p class="apply-sidebar__eyebrow">Apply</p>
+          <h1 class="apply-sidebar__title">${opening.title}</h1>
+          <p class="apply-sidebar__summary">${opening.summary}</p>
+          <dl class="apply-sidebar__meta">${metaRows}</dl>
+          <p class="apply-sidebar__note">Your application is reviewed by the hiring team for this club or venue. You’ll get next steps by email.</p>
+        </aside>
+
+        <div class="apply-panel">
+          <form class="apply-form" id="apply-form" novalidate>
+            <section class="apply-form__section">
+              <h2 class="apply-form__section-title"><span class="apply-form__section-number">1.</span> Personal details</h2>
+              <p class="apply-form__section-intro">We’ll use these details to contact you about this role.</p>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-first-name">First name</label>
+                <input class="apply-form__input" id="apply-first-name" name="firstName" type="text" autocomplete="given-name" required />
+              </div>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-last-name">Last name</label>
+                <input class="apply-form__input" id="apply-last-name" name="lastName" type="text" autocomplete="family-name" required />
+              </div>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-email">Email address</label>
+                <input class="apply-form__input" id="apply-email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-phone">Phone</label>
+                <input class="apply-form__input" id="apply-phone" name="phone" type="tel" autocomplete="tel" required />
+              </div>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-city">City</label>
+                <input class="apply-form__input" id="apply-city" name="city" type="text" autocomplete="address-level2" required />
+              </div>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-state">State / province</label>
+                <input class="apply-form__input" id="apply-state" name="state" type="text" autocomplete="address-level1" required />
+              </div>
+            </section>
+
+            <section class="apply-form__section">
+              <h2 class="apply-form__section-title"><span class="apply-form__section-number">2.</span> Profile</h2>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-experience">Relevant experience</label>
+                <textarea class="apply-form__textarea" id="apply-experience" name="experience" rows="4" placeholder="Customer service, events, retail, stadium, front office..." required></textarea>
+              </div>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-resume">Résumé / CV <span class="apply-form__optional">(optional)</span></label>
+                <p class="apply-form__field-note">PDF or Word · demo only, file is not uploaded.</p>
+                <input class="apply-form__input" id="apply-resume" name="resume" type="file" accept=".pdf,.doc,.docx" />
+              </div>
+            </section>
+
+            <section class="apply-form__section">
+              <h2 class="apply-form__section-title"><span class="apply-form__section-number">3.</span> Questions</h2>
+              <p class="apply-form__section-intro">Help the hiring team understand your availability.</p>
+              <div class="apply-form__subsection">
+                <p class="apply-form__location-question">Are you legally authorized to work in the U.S. or Canada (as required for this role)?</p>
+                <fieldset class="apply-form__yes-no">
+                  <label class="apply-form__yes-no-option"><input type="radio" name="workAuth" value="yes" required /><span>Yes</span></label>
+                  <label class="apply-form__yes-no-option"><input type="radio" name="workAuth" value="no" /><span>No</span></label>
+                </fieldset>
+              </div>
+              <div class="apply-form__subsection">
+                <p class="apply-form__location-question">Are you available for evenings, weekends, and matchday shifts as needed?</p>
+                <fieldset class="apply-form__yes-no">
+                  <label class="apply-form__yes-no-option"><input type="radio" name="flexibleHours" value="yes" required /><span>Yes</span></label>
+                  <label class="apply-form__yes-no-option"><input type="radio" name="flexibleHours" value="no" /><span>No</span></label>
+                </fieldset>
+              </div>
+              <div class="apply-form__subsection">
+                <p class="apply-form__location-question">Can you commute to ${opening.location} for this role?</p>
+                <fieldset class="apply-form__yes-no">
+                  <label class="apply-form__yes-no-option"><input type="radio" name="canCommute" value="yes" required /><span>Yes</span></label>
+                  <label class="apply-form__yes-no-option"><input type="radio" name="canCommute" value="no" /><span>No</span></label>
+                </fieldset>
+              </div>
+              <div class="apply-form__field">
+                <label class="apply-form__label" for="apply-why">Why do you want this role?</label>
+                <textarea class="apply-form__textarea" id="apply-why" name="why" rows="4" required></textarea>
+              </div>
+            </section>
+
+            <section class="apply-form__section apply-form__section--submit">
+              <h2 class="apply-form__section-title"><span class="apply-form__section-number">4.</span> Submit application</h2>
+              <p class="apply-form__section-intro">If you’re happy for us to store your personal data, please confirm below. You can review our <a href="privacy.html">privacy policy</a> for more information.</p>
+              <div class="apply-form__choice">
+                <input class="apply-form__checkbox" id="apply-consent" name="consent" type="checkbox" required />
+                <label class="apply-form__checkbox-label" for="apply-consent">Allow us to process your personal information for this application.</label>
+              </div>
+              <div class="apply-form__actions">
+                <button class="btn btn-primary apply-form__submit" type="submit">Submit application</button>
+              </div>
+              <p class="apply-form__error" id="apply-form-error" hidden>Please complete all required fields before submitting.</p>
+            </section>
+          </form>
+        </div>
+      </div>
+    `;
+
+    const form = qs('#apply-form');
+    const errorEl = qs('#apply-form-error');
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        if (errorEl) errorEl.hidden = false;
+        form.reportValidity();
+        return;
+      }
+      const draft = {
+        kind: opening.kind,
+        title: opening.title,
+        club: opening.club,
+        matchId: opening.matchId,
+        roleId: opening.roleId,
+        clubJobId: opening.clubJobId,
+        jobId: opening.jobId,
+        firstName: form.firstName.value.trim(),
+        lastName: form.lastName.value.trim(),
+        email: form.email.value.trim(),
+        submittedAt: new Date().toISOString(),
+      };
+      localStorage.setItem('mw_last_application', JSON.stringify(draft));
+      root.innerHTML = `
+        <div class="apply-shell apply-shell--single">
+          <div class="apply-panel apply-panel--message apply-panel--success">
+            <p class="apply-panel__eyebrow">Application submitted</p>
+            <h1 class="apply-panel__title">Thank you for applying</h1>
+            <p class="apply-panel__text">Your application for <strong>${opening.title}</strong> has been received.</p>
+            <p class="apply-panel__text">A confirmation note will be sent to <strong>${draft.email}</strong>. The hiring team will follow up with next steps.</p>
+            <a class="btn btn-primary" href="jobs.html">View more openings</a>
+          </div>
+        </div>`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   function renderDashboard() {
