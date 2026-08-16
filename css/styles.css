@@ -1144,6 +1144,88 @@ ul { list-style: none; }
   background: var(--red);
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.event-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  margin-bottom: 1.1rem;
+}
+
+.event-search {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.event-search input {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 0.55rem;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  background: #fff;
+}
+
+.event-search input:focus {
+  outline: 2px solid rgba(200, 16, 46, 0.25);
+  border-color: var(--red);
+}
+
+.event-kind {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  border-radius: 0.55rem;
+  background: #efefef;
+}
+
+.event-kind-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.4rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.event-kind-btn.is-active {
+  background: #fff;
+  color: var(--ink-deep);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.role-detail__notice,
+.apply-demo-banner {
+  margin: 0.85rem 0 0;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.45rem;
+  background: #fff7e8;
+  border: 1px solid #f0d9a8;
+  color: #6b4e16;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.apply-demo-banner--inline {
+  margin: 1rem 0 0;
+}
+
 .jobs-panel-head {
   display: flex;
   justify-content: space-between;
@@ -1437,11 +1519,22 @@ ul { list-style: none; }
   object-fit: contain;
 }
 
-.club-job-card:nth-child(3n) .club-job-mark:not(.club-job-logo) {
+.event-job-mark {
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: linear-gradient(145deg, #1a1a1a 0%, #3a1515 55%, #c8102e 160%);
+  border-radius: 0.55rem;
+}
+
+.club-job-card:nth-child(3n) .club-job-mark:not(.club-job-logo):not(.event-job-mark) {
   background: linear-gradient(145deg, #111, #3a1515);
 }
 
-.club-job-card:nth-child(3n + 2) .club-job-mark:not(.club-job-logo) {
+.club-job-card:nth-child(3n + 2) .club-job-mark:not(.club-job-logo):not(.event-job-mark) {
   background: linear-gradient(145deg, #0d3d2c, #1a3a55);
 }
 
@@ -2980,7 +3073,7 @@ ul { list-style: none; }
   .event-date .day { font-size: 1.5rem; }
 }
 
-/* ——— FIFA-style apply / role detail flow ——— */
+/* ——— Apply / role detail flow ——— */
 .flow-page {
   min-height: 100vh;
   background: #f7f7f7;
@@ -3271,6 +3364,15 @@ ul { list-style: none; }
   line-height: 1.55;
 }
 
+.thank-you-next {
+  margin: 1.15rem 0 1.35rem;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid #ececec;
+  color: #6b7280;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .apply-form__section {
   padding-bottom: 1.75rem;
   margin-bottom: 1.5rem;
@@ -3423,5 +3525,234 @@ ul { list-style: none; }
     right: max(1rem, env(safe-area-inset-right));
     text-align: center;
     justify-content: center;
+  }
+}
+
+/* ——— Onboarding / role-fee payment page ——— */
+.payment-shell {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.payment-panel {
+  background: var(--white);
+  border: 1px solid #ebebeb;
+  padding: 1.75rem 1.4rem 2rem;
+}
+
+.payment-panel__eyebrow {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pitch-deep, #0d3d2c);
+}
+
+.payment-panel__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.payment-panel__intro,
+.payment-section__text,
+.payment-section__meta,
+.payment-method-card__note,
+.payment-actions__hint {
+  color: #555;
+  line-height: 1.55;
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+}
+
+.payment-id-card {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  border: 2px dashed #c9d8cf;
+  background: #f4faf6;
+}
+
+.payment-id-card__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--pitch-deep, #0d3d2c);
+}
+
+.payment-id-card__value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  letter-spacing: 0.02em;
+}
+
+.payment-id-card__note {
+  margin: 0.45rem 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.payment-reporting,
+.payment-fees,
+.payment-methods {
+  margin-top: 1.5rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid #ececec;
+}
+
+.payment-section__title {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  text-transform: uppercase;
+}
+
+.payment-pay-compare {
+  margin: 0 0 0.85rem;
+  padding: 0.7rem 0.8rem;
+  background: #f7f7f7;
+  border: 1px solid #ececec;
+  color: #444;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+
+.payment-fee-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.85rem;
+  padding: 0.85rem 0.95rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.payment-fee-row:last-child {
+  border-bottom: 0;
+}
+
+.payment-fee-row__label,
+.payment-fee-row__amount {
+  margin: 0;
+  font-weight: 650;
+  font-size: 0.95rem;
+}
+
+.payment-fee-row__description {
+  margin: 0.25rem 0 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.payment-fee-totals {
+  margin-top: 0.85rem;
+}
+
+.payment-fee-total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.payment-fee-total-row--grand {
+  margin-top: 0.35rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e5e5;
+  font-size: 1.05rem;
+}
+
+.payment-method-card {
+  margin-top: 0.85rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid #ebebeb;
+  background: #fafafa;
+}
+
+.payment-method-card--primary {
+  border-color: #c9d8cf;
+  background: #f4faf6;
+}
+
+.payment-method-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.payment-method-card__title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.payment-method-card__badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  background: #0d3d2c;
+  color: #fff;
+}
+
+.chime-info__section {
+  margin-bottom: 0.85rem;
+}
+
+.chime-info__section--last {
+  margin-bottom: 0.35rem;
+}
+
+.chime-info__label {
+  margin: 0 0 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.chime-info__value {
+  margin: 0;
+  font-weight: 650;
+}
+
+.chime-info__value--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.92rem;
+}
+
+.chime-info__copy {
+  margin-top: 0.35rem;
+  appearance: none;
+  border: 1px solid #d5d5d5;
+  background: #fff;
+  padding: 0.35rem 0.65rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chime-info__copy:hover {
+  border-color: #999;
+}
+
+.chime-info__copy:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  .payment-fee-row {
+    grid-template-columns: 1fr;
   }
 }

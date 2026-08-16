@@ -353,23 +353,23 @@ const MW = {
   jobs: [],
 
   matchRoles: [
-    { id: 'guest-services', title: 'Guest Services Associate', category: 'Guest Services', type: 'Event-based', payMin: 18, payMax: 21, payLabel: '$18–$21 / hr', slots: 28 },
-    { id: 'ushering', title: 'Matchday Usher', category: 'Ushering', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 32 },
-    { id: 'ticket-scanning', title: 'Ticket Scanner', category: 'Ticket Scanning', type: 'Event-based', payMin: 17, payMax: 19, payLabel: '$17–$19 / hr', slots: 18 },
-    { id: 'bag-check', title: 'Bag Check Associate', category: 'Bag Check & Screening', type: 'Event-based', payMin: 18, payMax: 20, payLabel: '$18–$20 / hr', slots: 16 },
-    { id: 'security', title: 'Event Security Officer', category: 'Security', type: 'Event-based', payMin: 20, payMax: 24, payLabel: '$20–$24 / hr', slots: 22 },
-    { id: 'concessions', title: 'Concessions Team Member', category: 'Concessions', type: 'Event-based', payMin: 16, payMax: 19, payLabel: '$16–$19 / hr', slots: 40 },
-    { id: 'bartending', title: 'Matchday Bartender', category: 'Bartending', type: 'Event-based', payMin: 16, payMax: 22, payLabel: '$16–$22 / hr + tips', slots: 12 },
-    { id: 'retail', title: 'Team Store Associate', category: 'Retail / Team Store', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 14 },
-    { id: 'hospitality', title: 'Suite Attendant', category: 'Hospitality & Suites', type: 'Event-based', payMin: 18, payMax: 22, payLabel: '$18–$22 / hr', slots: 10 },
-    { id: 'premium', title: 'Club Level Host', category: 'Club & Premium Experience', type: 'Event-based', payMin: 19, payMax: 23, payLabel: '$19–$23 / hr', slots: 8 },
-    { id: 'parking', title: 'Parking Attendant', category: 'Parking & Traffic', type: 'Event-based', payMin: 16, payMax: 18, payLabel: '$16–$18 / hr', slots: 20 },
-    { id: 'cleaning', title: 'Event Cleaner', category: 'Cleaning & Housekeeping', type: 'Event-based', payMin: 16, payMax: 18, payLabel: '$16–$18 / hr', slots: 24 },
-    { id: 'event-ops', title: 'Event Operations Crew', category: 'Event Operations', type: 'Event-based', payMin: 18, payMax: 21, payLabel: '$18–$21 / hr', slots: 15 },
-    { id: 'field-ops', title: 'Field Operations Crew', category: 'Field Operations', type: 'Event-based', payMin: 18, payMax: 22, payLabel: '$18–$22 / hr', slots: 6 },
-    { id: 'medical', title: 'First Aid / Medical Support', category: 'Medical & First Aid', type: 'Event-based', payMin: 22, payMax: 28, payLabel: '$22–$28 / hr', slots: 4 },
-    { id: 'warehouse', title: 'Warehouse & Logistics', category: 'Warehouse & Logistics', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 8 },
-    { id: 'box-office', title: 'Box Office / Will Call', category: 'Box Office / Will Call', type: 'Event-based', payMin: 17, payMax: 20, payLabel: '$17–$20 / hr', slots: 6 },
+    { id: 'guest-services', title: 'Guest Services Associate', category: 'Guest Services', type: 'Event-based', payMin: 24, payMax: 30, payLabel: '$24–$30 / hr', slots: 28 },
+    { id: 'ushering', title: 'Matchday Usher', category: 'Ushering', type: 'Event-based', payMin: 23, payMax: 28, payLabel: '$23–$28 / hr', slots: 32 },
+    { id: 'ticket-scanning', title: 'Ticket Scanner', category: 'Ticket Scanning', type: 'Event-based', payMin: 23, payMax: 27, payLabel: '$23–$27 / hr', slots: 18 },
+    { id: 'bag-check', title: 'Bag Check Associate', category: 'Bag Check & Screening', type: 'Event-based', payMin: 25, payMax: 30, payLabel: '$25–$30 / hr', slots: 16 },
+    { id: 'security', title: 'Event Security Officer', category: 'Security', type: 'Event-based', payMin: 28, payMax: 36, payLabel: '$28–$36 / hr', slots: 22 },
+    { id: 'concessions', title: 'Concessions Team Member', category: 'Concessions', type: 'Event-based', payMin: 22, payMax: 28, payLabel: '$22–$28 / hr + tips where offered', slots: 40 },
+    { id: 'bartending', title: 'Matchday Bartender', category: 'Bartending', type: 'Event-based', payMin: 24, payMax: 32, payLabel: '$24–$32 / hr + tips', slots: 12 },
+    { id: 'retail', title: 'Team Store Associate', category: 'Retail / Team Store', type: 'Event-based', payMin: 23, payMax: 29, payLabel: '$23–$29 / hr', slots: 14 },
+    { id: 'hospitality', title: 'Suite Attendant', category: 'Hospitality & Suites', type: 'Event-based', payMin: 26, payMax: 34, payLabel: '$26–$34 / hr', slots: 10 },
+    { id: 'premium', title: 'Club Level Host', category: 'Club & Premium Experience', type: 'Event-based', payMin: 27, payMax: 35, payLabel: '$27–$35 / hr', slots: 8 },
+    { id: 'parking', title: 'Parking Attendant', category: 'Parking & Traffic', type: 'Event-based', payMin: 22, payMax: 26, payLabel: '$22–$26 / hr', slots: 20 },
+    { id: 'cleaning', title: 'Event Cleaner', category: 'Cleaning & Housekeeping', type: 'Event-based', payMin: 22, payMax: 27, payLabel: '$22–$27 / hr', slots: 24 },
+    { id: 'event-ops', title: 'Event Operations Crew', category: 'Event Operations', type: 'Event-based', payMin: 25, payMax: 32, payLabel: '$25–$32 / hr', slots: 15 },
+    { id: 'field-ops', title: 'Field Operations Crew', category: 'Field Operations', type: 'Event-based', payMin: 26, payMax: 34, payLabel: '$26–$34 / hr', slots: 6 },
+    { id: 'medical', title: 'First Aid / Medical Support', category: 'Medical & First Aid', type: 'Event-based', payMin: 32, payMax: 42, payLabel: '$32–$42 / hr', slots: 4 },
+    { id: 'warehouse', title: 'Warehouse & Logistics', category: 'Warehouse & Logistics', type: 'Event-based', payMin: 24, payMax: 30, payLabel: '$24–$30 / hr', slots: 8 },
+    { id: 'box-office', title: 'Box Office / Will Call', category: 'Box Office / Will Call', type: 'Event-based', payMin: 23, payMax: 29, payLabel: '$23–$29 / hr', slots: 6 },
   ],
 
   clubJobs: [
@@ -1897,7 +1897,7 @@ const MW = {
       id: 'evt-pp-aug',
       title: 'Providence Park Hiring Day',
       stadiumId: 'providence-park',
-      date: '2026-08-14',
+      date: '2026-08-17',
       time: '10:00 AM – 3:00 PM PT',
       location: 'Providence Park — Club Level Meeting Room',
       roles: ['Guest Services', 'Suite Attendant', 'Concessions'],
@@ -1909,37 +1909,37 @@ const MW = {
       id: 'evt-bmo-aug',
       title: 'BMO Stadium Recruitment Fair',
       stadiumId: 'bmo-stadium',
-      date: '2026-08-13',
+      date: '2026-08-18',
       time: '11:00 AM – 4:00 PM PT',
       location: 'Exposition Park — Community Tent',
       roles: ['Security', 'Retail', 'Guest Services'],
       bring: ['Photo ID', 'Security license if applicable', 'Availability calendar'],
       spots: 60,
-      note: 'Staffing for LAFC vs San Diego FC (Aug 15) and vs Portland Timbers (Aug 22)',
+      note: 'Staffing for LAFC vs Portland Timbers (Aug 22) and vs New York Red Bulls (Sep 9)',
     },
     {
       id: 'evt-geo-aug',
       title: 'Nashville Matchday Crew Open House',
       stadiumId: 'geodis-park',
-      date: '2026-08-14',
+      date: '2026-08-20',
       time: '9:00 AM – 1:00 PM CT',
       location: 'GEODIS Park — South Plaza',
       roles: ['Concessions', 'Operations', 'Parking'],
       bring: ['Photo ID', 'Food handler card if available', 'Work eligibility documents'],
       spots: 35,
-      note: 'Ahead of Nashville SC vs Inter Miami CF (Aug 15)',
+      note: 'Ahead of Nashville SC vs Columbus Crew (Aug 22) and FC Cincinnati (Aug 29)',
     },
     {
       id: 'evt-lumen-aug',
       title: 'Lumen Field Walk-Up Interviews',
       stadiumId: 'lumen-field',
-      date: '2026-08-14',
+      date: '2026-08-21',
       time: '12:00 PM – 5:00 PM PT',
       location: 'Lumen Field — Event Staff Office',
       roles: ['Usher', 'Parking', 'Guest Services'],
       bring: ['Photo ID', 'Resume', 'Two references'],
       spots: 50,
-      note: 'Staffing for Sounders vs Vancouver (Aug 16) and Austin FC (Aug 19)',
+      note: 'Staffing for Sounders vs Chicago Fire FC (Aug 29) and later August matchdays',
     },
   ],
 
@@ -1977,16 +1977,45 @@ MW.getJob = (id) => MW.jobs.find((j) => j.id === id);
 MW.getFixture = (id) => (MW.fixtures || []).find((f) => f.id === id);
 MW.getMatchRole = (id) => (MW.matchRoles || []).find((r) => r.id === id);
 MW.getClubJob = (id) => (MW.clubJobs || []).find((j) => j.id === id);
+
+/** Local calendar date as YYYY-MM-DD (used to auto-hide past matchdays / deadlines). */
+MW.todayISO = () => {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
+MW.isPastDate = (iso) => Boolean(iso) && String(iso).slice(0, 10) < MW.todayISO();
+MW.isUpcomingDate = (iso) => Boolean(iso) && !MW.isPastDate(iso);
+
 MW.enrichJob = (job) => {
   const stadium = MW.getStadium(job.stadiumId);
   return { ...job, stadium };
 };
-MW.enrichedJobs = () => MW.jobs.map(MW.enrichJob);
+MW.enrichedJobs = () =>
+  MW.jobs
+    .map(MW.enrichJob)
+    .filter((job) => !job.deadline || MW.isUpcomingDate(job.deadline));
+
 MW.enrichFixture = (fixture) => {
   const stadium = MW.getStadium(fixture.stadiumId);
   return { ...fixture, stadium };
 };
-MW.enrichedFixtures = () => (MW.fixtures || []).map(MW.enrichFixture);
+MW.enrichedFixtures = () =>
+  (MW.fixtures || [])
+    .map(MW.enrichFixture)
+    .filter((fx) => MW.isUpcomingDate(fx.date));
+
+MW.upcomingEvents = () => (MW.events || []).filter((e) => MW.isUpcomingDate(e.date));
+
+/** Home fixtures for a stadium, newest-first schedule order (upcoming only). */
+MW.homeFixtures = (stadiumId) =>
+  MW.enrichedFixtures()
+    .filter((fx) => fx.stadiumId === stadiumId)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
 MW.clubLogos = {
   'Atlanta United FC': 'assets/clubLogo/AtlantaUnitedFC.png',
   'Austin FC': 'assets/clubLogo/AustinFC.png',

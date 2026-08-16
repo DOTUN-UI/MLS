@@ -1,6 +1,7 @@
 /* Matchday Workforce — shared UI helpers */
 (function () {
   const params = new URLSearchParams(window.location.search);
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mdavpbew';
 
   function qs(sel, root = document) {
     return root.querySelector(sel);
@@ -30,6 +31,21 @@
       .split('/')
       .map((part) => encodeURIComponent(part))
       .join('/');
+  }
+
+  function ensureEventJobs() {
+    if (Array.isArray(MW.eventJobs)) return Promise.resolve(MW.eventJobs);
+    if (MW._eventJobsPromise) return MW._eventJobsPromise;
+    MW._eventJobsPromise = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'js/event-jobs.js';
+      s.async = true;
+      s.dataset.eventJobs = '1';
+      s.onload = () => resolve(MW.eventJobs || []);
+      s.onerror = () => reject(new Error('Failed to load event roles'));
+      document.head.appendChild(s);
+    });
+    return MW._eventJobsPromise;
   }
 
   function showToast(message) {
@@ -270,7 +286,7 @@
         .join('');
     }
     if (events) {
-      events.innerHTML = MW.events.slice(0, 3).map(eventItemHTML).join('');
+      events.innerHTML = MW.upcomingEvents().slice(0, 3).map(eventItemHTML).join('');
     }
     if (stadiums) {
       stadiums.innerHTML = MW.stadiums.map(stadiumTileHTML).join('');
@@ -296,7 +312,8 @@
     const form = qs('#filters-form');
     const fixturesList = qs('#fixtures-list');
     const clubList = qs('#club-jobs-list');
-    if (!form || (!fixturesList && !clubList)) return;
+    const eventList = qs('#event-jobs-list');
+    if (!form || (!fixturesList && !clubList && !eventList)) return;
 
     const fixturesView = qs('#fixtures-view');
     const rolesView = qs('#match-roles-view');
@@ -305,18 +322,32 @@
     const fixturesCount = qs('#fixtures-count');
     const rolesCount = qs('#roles-count');
     const clubCount = qs('#club-jobs-count');
+    const eventCount = qs('#event-jobs-count');
     const matchdayPanel = qs('#matchday-panel');
     const clubPanel = qs('#club-panel');
+    const eventsPanel = qs('#events-panel');
     const citySel = qs('#filter-city');
     const clubSel = qs('#filter-club');
     const stadiumSel = qs('#filter-stadium');
+    const categorySel = qs('#filter-category');
+    const monthGroup = qs('#filter-month')?.closest('.filter-group');
+    const clubGroup = clubSel?.closest('.filter-group');
+    const stadiumGroup = stadiumSel?.closest('.filter-group');
     const filterPanel = qs('#filter-panel');
     const filterToggle = qs('#filter-toggle');
     const filterCount = qs('#filter-active-count');
     const clearBtn = qs('#clear-filters');
 
-    let activeTab = params.get('tab') === 'club' ? 'club' : 'matchday';
+    const MLS_CATEGORY_OPTIONS = categorySel
+      ? [...categorySel.querySelectorAll('option')].map((o) => ({ value: o.value, label: o.textContent }))
+      : [];
+
+    let activeTab =
+      params.get('tab') === 'club' ? 'club' : params.get('tab') === 'events' ? 'events' : 'matchday';
     let selectedMatchId = params.get('match') || '';
+    let eventKind = 'all';
+    let eventQuery = '';
+    let eventReady = Array.isArray(MW.eventJobs);
 
     const filters = () =>
       form ? Object.fromEntries(new FormData(form).entries()) : Object.fromEntries(params.entries());
@@ -377,9 +408,77 @@
       if ([...stadiumSel.options].some((o) => o.value === selected)) stadiumSel.value = selected;
     };
 
+    const populateMlsCities = () => {
+      if (!citySel) return;
+      const selected = citySel.value;
+      citySel.innerHTML = '<option value="">Any city</option>';
+      MW.marketRegions.forEach((region) => {
+        const options = region.cities
+          .map((c) => `<option value="${c.city}">${c.city}, ${c.state}</option>`)
+          .join('');
+        citySel.insertAdjacentHTML('beforeend', `<optgroup label="${region.label}">${options}</optgroup>`);
+      });
+      if ([...citySel.options].some((o) => o.value === selected)) citySel.value = selected;
+    };
+
+    const populateEventCities = () => {
+      if (!citySel) return;
+      const selected = citySel.value;
+      citySel.innerHTML = '<option value="">Any city</option>';
+      [...new Set((MW.eventJobs || []).map((j) => j.city).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b))
+        .forEach((city) => {
+          citySel.insertAdjacentHTML('beforeend', `<option value="${city}">${city}</option>`);
+        });
+      if ([...citySel.options].some((o) => o.value === selected)) citySel.value = selected;
+    };
+
+    const populateCategoryOptions = () => {
+      if (!categorySel) return;
+      const selected = categorySel.value;
+      if (activeTab === 'events') {
+        categorySel.innerHTML = '<option value="">Any department</option>';
+        [...new Set((MW.eventJobs || []).map((j) => j.department).filter(Boolean))]
+          .sort((a, b) => a.localeCompare(b))
+          .forEach((dept) => {
+            categorySel.insertAdjacentHTML('beforeend', `<option value="${dept}">${dept}</option>`);
+          });
+        const label = categorySel.previousElementSibling;
+        if (label && label.tagName === 'LABEL') label.textContent = 'Department';
+      } else {
+        categorySel.innerHTML = MLS_CATEGORY_OPTIONS.map(
+          (o) => `<option value="${o.value}">${o.label}</option>`
+        ).join('');
+        const label = categorySel.previousElementSibling;
+        if (label && label.tagName === 'LABEL') label.textContent = 'Role category';
+      }
+      if ([...categorySel.options].some((o) => o.value === selected)) categorySel.value = selected;
+      else categorySel.value = '';
+    };
+
+    const syncFilterVisibility = () => {
+      const events = activeTab === 'events';
+      if (clubGroup) clubGroup.hidden = events;
+      if (stadiumGroup) stadiumGroup.hidden = events;
+      if (monthGroup) monthGroup.hidden = events;
+      if (events) {
+        if (clubSel) clubSel.value = '';
+        if (stadiumSel) stadiumSel.value = '';
+        const monthSel = form.elements.month;
+        if (monthSel) monthSel.value = '';
+      }
+    };
+
     const refreshLocationFilters = () => {
-      populateClubOptions();
-      populateStadiumOptions();
+      if (activeTab === 'events') {
+        populateEventCities();
+      } else {
+        populateMlsCities();
+        populateClubOptions();
+        populateStadiumOptions();
+      }
+      populateCategoryOptions();
+      syncFilterVisibility();
     };
 
     const setUrl = () => {
@@ -389,7 +488,7 @@
         if (f[key]) url.searchParams.set(key, f[key]);
         else url.searchParams.delete(key);
       });
-      if (activeTab === 'club') url.searchParams.set('tab', 'club');
+      if (activeTab === 'club' || activeTab === 'events') url.searchParams.set('tab', activeTab);
       else url.searchParams.delete('tab');
       if (selectedMatchId && activeTab === 'matchday') url.searchParams.set('match', selectedMatchId);
       else url.searchParams.delete('match');
@@ -414,6 +513,19 @@
         if (f.stadium) {
           const home = MW.stadiums.find((s) => s.id === f.stadium);
           if (home && job.club !== home.club) return false;
+        }
+        return true;
+      });
+
+    const filterEventJobs = (f) =>
+      (MW.eventJobs || []).filter((job) => {
+        if (f.city && job.city !== f.city) return false;
+        if (f.category && job.department !== f.category) return false;
+        if (eventKind === 'matchday' && !job.matchDay) return false;
+        if (eventKind === 'seasonal' && job.matchDay) return false;
+        if (eventQuery) {
+          const hay = `${job.title} ${job.department} ${job.location} ${job.city}`.toLowerCase();
+          if (!hay.includes(eventQuery)) return false;
         }
         return true;
       });
@@ -478,9 +590,25 @@
     `;
     };
 
+    const eventJobCardHTML = (job, index) => `
+      <article class="club-job-card" style="--i:${index}">
+        <div class="club-job-mark event-job-mark" aria-hidden="true">EVT</div>
+        <div class="club-job-main">
+          <h3>${job.title}</h3>
+          <p class="club-job-org">${job.department}</p>
+          <p class="club-job-loc">${job.location}</p>
+          <p class="club-job-level">${job.matchDay ? 'Match day' : 'Seasonal'} · ${job.payLabel}</p>
+        </div>
+        <a class="club-job-view" href="job.html?eventJob=${encodeURIComponent(job.id)}">
+          <span>View</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+    `;
+
     const showMatchRoles = (matchId) => {
       const fixture = MW.enrichFixture(MW.getFixture(matchId) || {});
-      if (!fixture?.id || !fixture.stadium) {
+      if (!fixture?.id || !fixture.stadium || MW.isPastDate(fixture.date)) {
         selectedMatchId = '';
         showFixtures();
         return;
@@ -534,6 +662,42 @@
       setUrl();
     };
 
+    const showEventJobs = () => {
+      if (!eventReady) {
+        if (eventCount) eventCount.textContent = '';
+        if (eventList) eventList.innerHTML = `<div class="empty">Loading event roles…</div>`;
+        setUrl();
+        return;
+      }
+      const results = filterEventJobs(filters());
+      if (eventCount) eventCount.textContent = `${results.length} role${results.length === 1 ? '' : 's'}`;
+      if (eventList) {
+        eventList.innerHTML = results.length
+          ? results.map(eventJobCardHTML).join('')
+          : `<div class="empty">No event roles match those filters.</div>`;
+      }
+      setUrl();
+    };
+
+    const loadEventTab = async () => {
+      if (eventReady) {
+        refreshLocationFilters();
+        showEventJobs();
+        return;
+      }
+      showEventJobs();
+      try {
+        await ensureEventJobs();
+        eventReady = true;
+        refreshLocationFilters();
+        showEventJobs();
+      } catch {
+        if (eventList) {
+          eventList.innerHTML = `<div class="empty">Couldn’t load event roles. Refresh and try again.</div>`;
+        }
+      }
+    };
+
     const setTab = (tab) => {
       activeTab = tab;
       qsa('.jobs-tab').forEach((btn) => {
@@ -549,37 +713,53 @@
         clubPanel.hidden = tab !== 'club';
         clubPanel.classList.toggle('is-active', tab === 'club');
       }
+      if (eventsPanel) {
+        eventsPanel.hidden = tab !== 'events';
+        eventsPanel.classList.toggle('is-active', tab === 'events');
+      }
       if (tab === 'club') {
         selectedMatchId = '';
+        refreshLocationFilters();
         showClubJobs();
+      } else if (tab === 'events') {
+        selectedMatchId = '';
+        loadEventTab();
       } else if (selectedMatchId) {
+        refreshLocationFilters();
         showMatchRoles(selectedMatchId);
       } else {
+        refreshLocationFilters();
         showFixtures();
       }
     };
 
     const apply = () => {
-      refreshLocationFilters();
+      if (activeTab !== 'events') {
+        populateClubOptions();
+        populateStadiumOptions();
+      }
       syncFilterChrome();
       if (activeTab === 'club') showClubJobs();
+      else if (activeTab === 'events') showEventJobs();
       else if (selectedMatchId) showMatchRoles(selectedMatchId);
       else showFixtures();
     };
-
-    if (citySel && citySel.options.length <= 1) {
-      MW.marketRegions.forEach((region) => {
-        const options = region.cities
-          .map((c) => `<option value="${c.city}">${c.city}, ${c.state}</option>`)
-          .join('');
-        citySel.insertAdjacentHTML('beforeend', `<optgroup label="${region.label}">${options}</optgroup>`);
-      });
-    }
 
     ['city', 'club', 'stadium', 'month', 'category'].forEach((key) => {
       const el = form.elements[key];
       if (el && params.get(key)) el.value = params.get(key);
     });
+
+    const monthSel = form.elements.month;
+    if (monthSel) {
+      const today = MW.todayISO();
+      const currentMonth = today.slice(0, 7);
+      [...monthSel.querySelectorAll('option')].forEach((opt) => {
+        if (!opt.value) return;
+        if (opt.value < currentMonth) opt.remove();
+      });
+      if (monthSel.value && monthSel.value < currentMonth) monthSel.value = '';
+    }
 
     if (activeFilterCount() > 0 && filterPanel) {
       filterPanel.classList.remove('is-collapsed');
@@ -599,6 +779,13 @@
     clearBtn?.addEventListener('click', () => {
       form.reset();
       selectedMatchId = '';
+      eventKind = 'all';
+      eventQuery = '';
+      const searchInput = qs('#event-search');
+      if (searchInput) searchInput.value = '';
+      qsa('.event-kind-btn').forEach((btn) => {
+        btn.classList.toggle('is-active', btn.dataset.eventKind === 'all');
+      });
       refreshLocationFilters();
       apply();
     });
@@ -607,7 +794,22 @@
       btn.addEventListener('click', () => setTab(btn.dataset.jobsTab));
     });
 
-    fixturesList.addEventListener('click', (e) => {
+    qs('#event-search')?.addEventListener('input', (e) => {
+      eventQuery = String(e.target.value || '').trim().toLowerCase();
+      if (activeTab === 'events') showEventJobs();
+    });
+
+    qsa('.event-kind-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        eventKind = btn.dataset.eventKind || 'all';
+        qsa('.event-kind-btn').forEach((b) => {
+          b.classList.toggle('is-active', b === btn);
+        });
+        if (activeTab === 'events') showEventJobs();
+      });
+    });
+
+    fixturesList?.addEventListener('click', (e) => {
       const card = e.target.closest('[data-match-id]');
       if (!card) return;
       showMatchRoles(card.dataset.matchId);
@@ -630,7 +832,8 @@
       return;
     }
     const jobs = MW.enrichedJobs().filter((j) => j.stadiumId === s.id);
-    const events = MW.events.filter((e) => e.stadiumId === s.id);
+    const events = MW.upcomingEvents().filter((e) => e.stadiumId === s.id);
+    const homeMatches = typeof MW.homeFixtures === 'function' ? MW.homeFixtures(s.id) : [];
 
     const venueImg = stadiumImageURL(s);
     root.innerHTML = `
@@ -645,26 +848,30 @@
           <p>${s.about}</p>
           ${s.address ? `<p style="color:var(--muted);margin-top:0.75rem">${s.address}</p>` : ''}
           <h2>Upcoming home matches</h2>
-          <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.75rem">Real 2026 fixtures from club schedules${s.source ? ` (${s.source})` : ''}.</p>
+          <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.75rem">Upcoming 2026 home fixtures for this venue.</p>
           <div class="job-grid">
-            ${s.matches
-              .map(
-                (m) => `
-              <div class="job-row" style="cursor:default">
+            ${
+              homeMatches.length
+                ? homeMatches
+                    .map(
+                      (m) => `
+              <a class="job-row" href="jobs.html?match=${encodeURIComponent(m.id)}&stadium=${encodeURIComponent(s.id)}">
                 <div>
                   <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;margin-bottom:0.25rem">
-                    <h3>${m.opponent}</h3>
-                    ${m.competition ? `<span class="badge badge-status">${m.competition}</span>` : ''}
+                    <h3>vs ${m.away}</h3>
+                    <span class="badge badge-status">MLS</span>
                   </div>
                   <div class="job-meta">
-                    <span>${m.displayDate || m.date}</span>
-                    <span>Kickoff ${m.kickoff}</span>
-                    ${m.broadcast ? `<span>${m.broadcast}</span>` : ''}
+                    <span>${formatDate(m.date)}</span>
+                    <span>${m.time}</span>
+                    <span>${m.openings} roles hiring</span>
                   </div>
                 </div>
-              </div>`
-              )
-              .join('')}
+              </a>`
+                    )
+                    .join('')
+                : '<div class="empty">No upcoming home matches right now.</div>'
+            }
           </div>
           <h2>Open positions</h2>
           <div class="job-grid">${jobs.map(jobRowHTML).join('') || '<div class="empty">No openings right now.</div>'}</div>
@@ -696,6 +903,32 @@
       const role = MW.getMatchRole(roleId);
       const stadium = fixture && MW.getStadium(fixture.stadiumId);
       if (fixture && role && stadium) {
+        if (MW.isPastDate(fixture.date)) {
+          return {
+            kind: 'match',
+            expired: true,
+            matchId,
+            roleId,
+            title: role.title,
+            eyebrow: 'Matchday closed',
+            summary: `${fixture.home} vs ${fixture.away}`,
+            club: stadium.club,
+            orgLabel: 'Club',
+            location: `${stadium.name}, ${stadium.city}, ${stadium.state}`,
+            category: role.category,
+            type: role.type,
+            pay: role.payLabel,
+            slots: 'No longer hiring',
+            when: `${formatDate(fixture.date)} · ${fixture.time}`,
+            applyHref: 'jobs.html',
+            detailHref: `job.html?match=${encodeURIComponent(matchId)}&role=${encodeURIComponent(roleId)}`,
+            backHref: 'jobs.html',
+            description:
+              `This matchday (${formatDate(fixture.date)}) has already passed, so applications for this role are closed.`,
+            responsibilities: [],
+            qualifications: [],
+          };
+        }
         const qs = `match=${encodeURIComponent(matchId)}&role=${encodeURIComponent(roleId)}`;
         return {
           kind: 'match',
@@ -705,6 +938,7 @@
           eyebrow: 'Matchday role',
           summary: `${fixture.home} vs ${fixture.away}`,
           club: stadium.club,
+          orgLabel: 'Club',
           location: `${stadium.name}, ${stadium.city}, ${stadium.state}`,
           category: role.category,
           type: role.type,
@@ -743,11 +977,14 @@
           eyebrow: 'Club & front office',
           summary: clubJob.club,
           club: clubJob.club,
+          orgLabel: 'Club',
           location: `${clubJob.city}, ${clubJob.state}`,
           category: clubJob.category,
           type: clubJob.type,
           level: clubJob.level,
-          pay: clubJob.type === 'Part-time' ? 'Part-time · competitive hourly' : 'Full-time · competitive salary',
+          pay: clubJob.type === 'Part-time'
+            ? 'Part-time · $26–$34 / hr'
+            : 'Full-time · $62,000–$92,000 / yr',
           slots: clubJob.level || clubJob.type,
           when: 'Hiring now',
           applyHref: `apply.html?${qs}`,
@@ -771,8 +1008,67 @@
       }
     }
 
+    const eventJobId = params.get('eventJob');
+    if (eventJobId) {
+      const eventJob = typeof MW.getEventJob === 'function' ? MW.getEventJob(eventJobId) : null;
+      if (eventJob) {
+        const qs = `eventJob=${encodeURIComponent(eventJobId)}`;
+        const desc = String(eventJob.description || '')
+          .split(/\n+/)
+          .map((p) => p.trim())
+          .filter(Boolean)
+          .join('</p><p>');
+        return {
+          kind: 'event',
+          eventJobId,
+          title: eventJob.title,
+          eyebrow: eventJob.matchDay ? 'Match day · Event ops' : 'Event operations',
+          summary: eventJob.department,
+          club: 'Matchday Workforce',
+          orgLabel: 'Organization',
+          location: eventJob.location || [eventJob.city, eventJob.province].filter(Boolean).join(', '),
+          category: eventJob.department,
+          type: eventJob.type || (eventJob.matchDay ? 'Match day' : 'Seasonal'),
+          level: eventJob.workplace || '',
+          pay: eventJob.payLabel || eventJob.payDetail || 'Competitive',
+          slots: eventJob.workplace || (eventJob.matchDay ? 'Match day' : 'Seasonal'),
+          when: eventJob.matchDay ? 'Match day hiring' : 'Seasonal hiring',
+          applyHref: `apply.html?${qs}`,
+          detailHref: `job.html?${qs}`,
+          backHref: 'jobs.html?tab=events',
+          description: desc || 'Event operations role with Matchday Workforce.',
+          responsibilities: Array.isArray(eventJob.responsibilities) ? eventJob.responsibilities : [],
+          qualifications: Array.isArray(eventJob.qualifications) ? eventJob.qualifications : [],
+        };
+      }
+    }
+
     if (jobId && MW.getJob(jobId)) {
       const job = MW.enrichJob(MW.getJob(jobId));
+      if (job.deadline && MW.isPastDate(job.deadline)) {
+        return {
+          kind: 'job',
+          expired: true,
+          jobId: job.id,
+          title: job.title,
+          eyebrow: 'Closed role',
+          summary: job.stadium.club,
+          club: job.stadium.club,
+          orgLabel: 'Club',
+          location: `${job.stadium.name}, ${job.stadium.city}, ${job.stadium.state}`,
+          category: job.category,
+          type: job.type,
+          pay: job.payLabel,
+          slots: 'Applications closed',
+          when: `Deadline was ${formatDate(job.deadline)}`,
+          applyHref: 'jobs.html',
+          detailHref: `job.html?job=${encodeURIComponent(job.id)}`,
+          backHref: 'jobs.html',
+          description: `The apply-by date for this role (${formatDate(job.deadline)}) has passed.`,
+          responsibilities: [],
+          qualifications: [],
+        };
+      }
       const qs = `job=${encodeURIComponent(job.id)}`;
       return {
         kind: 'job',
@@ -781,6 +1077,7 @@
         eyebrow: 'Open role',
         summary: job.stadium.club,
         club: job.stadium.club,
+        orgLabel: 'Club',
         location: `${job.stadium.name}, ${job.stadium.city}, ${job.stadium.state}`,
         category: job.category,
         type: job.type,
@@ -811,9 +1108,23 @@
     });
   }
 
-  function renderJobPage() {
+  async function renderJobPage() {
     const root = qs('#job-page');
     if (!root) return;
+
+    if (params.get('eventJob')) {
+      try {
+        await ensureEventJobs();
+      } catch {
+        root.innerHTML = `
+          <div class="apply-panel apply-panel--message">
+            <h1 class="apply-panel__title">Couldn’t load role</h1>
+            <p class="apply-panel__text">Event roles failed to load. Please refresh and try again.</p>
+            <a class="btn btn-primary" href="jobs.html?tab=events">Back to Event operations</a>
+          </div>`;
+        return;
+      }
+    }
 
     const opening = resolveOpening();
     initFlowBack(opening?.backHref || 'jobs.html');
@@ -829,6 +1140,10 @@
     }
 
     document.title = `${opening.title} — Matchday Workforce`;
+    const categoryLabel = opening.kind === 'event' ? 'Department' : 'Category';
+    const applyCta = opening.expired
+      ? `<a class="floating-cta btn btn-primary" href="jobs.html">Browse open matchdays</a>`
+      : `<a class="floating-cta btn btn-primary" id="job-apply-floating" href="${opening.applyHref}">Apply now</a>`;
     root.innerHTML = `
       <article class="role-detail">
         <header class="role-detail__header">
@@ -836,12 +1151,17 @@
           <h1 class="role-detail__title">${opening.title}</h1>
           <p class="role-detail__summary">${opening.summary}</p>
           ${opening.slots ? `<p class="role-detail__slots">${opening.slots}</p>` : ''}
+          ${
+            opening.expired
+              ? `<p class="role-detail__notice">This matchday has passed — applications are closed.</p>`
+              : ''
+          }
         </header>
 
         <div class="role-detail__meta">
-          <div class="role-detail__meta-item"><span>Club</span><strong>${opening.club}</strong></div>
+          <div class="role-detail__meta-item"><span>${opening.orgLabel || 'Club'}</span><strong>${opening.club}</strong></div>
           <div class="role-detail__meta-item"><span>Location</span><strong>${opening.location}</strong></div>
-          <div class="role-detail__meta-item"><span>Category</span><strong>${opening.category}</strong></div>
+          <div class="role-detail__meta-item"><span>${categoryLabel}</span><strong>${opening.category}</strong></div>
           <div class="role-detail__meta-item"><span>Type</span><strong>${opening.type || opening.level || ''}</strong></div>
           <div class="role-detail__meta-item"><span>Pay</span><strong>${opening.pay}</strong></div>
           <div class="role-detail__meta-item"><span>Timing</span><strong>${opening.when}</strong></div>
@@ -853,20 +1173,36 @@
         </section>
         <section class="role-detail__section">
           <h2>Responsibilities</h2>
-          <ul>${opening.responsibilities.map((item) => `<li>${item}</li>`).join('')}</ul>
+          <ul>${(opening.responsibilities || []).map((item) => `<li>${item}</li>`).join('') || '<li>Details provided during interview.</li>'}</ul>
         </section>
         <section class="role-detail__section">
           <h2>Qualifications</h2>
-          <ul>${opening.qualifications.map((item) => `<li>${item}</li>`).join('')}</ul>
+          <ul>${(opening.qualifications || []).map((item) => `<li>${item}</li>`).join('') || '<li>Relevant experience preferred.</li>'}</ul>
         </section>
       </article>
-      <a class="floating-cta btn btn-primary" id="job-apply-floating" href="${opening.applyHref}">Apply now</a>
+      ${applyCta}
     `;
   }
 
-  function renderApply() {
+  async function renderApply() {
     const root = qs('#apply-content');
     if (!root) return;
+
+    if (params.get('eventJob')) {
+      try {
+        await ensureEventJobs();
+      } catch {
+        root.innerHTML = `
+          <div class="apply-shell apply-shell--single">
+            <div class="apply-panel apply-panel--message">
+              <h1 class="apply-panel__title">Couldn’t load role</h1>
+              <p class="apply-panel__text">Event roles failed to load. Please refresh and try again.</p>
+              <a class="btn btn-primary" href="jobs.html?tab=events">Back to Event operations</a>
+            </div>
+          </div>`;
+        return;
+      }
+    }
 
     const opening = resolveOpening();
     initFlowBack(opening?.detailHref || opening?.backHref || 'jobs.html');
@@ -883,12 +1219,25 @@
       return;
     }
 
+    if (opening.expired) {
+      root.innerHTML = `
+        <div class="apply-shell apply-shell--single">
+          <div class="apply-panel apply-panel--message">
+            <h1 class="apply-panel__title">Matchday closed</h1>
+            <p class="apply-panel__text">${opening.description}</p>
+            <a class="btn btn-primary" href="jobs.html">Browse open matchdays</a>
+          </div>
+        </div>`;
+      return;
+    }
+
     document.title = `Apply: ${opening.title} — Matchday Workforce`;
 
+    const categoryLabel = opening.kind === 'event' ? 'Department' : 'Category';
     const metaRows = [
-      ['Club', opening.club],
+      [opening.orgLabel || 'Club', opening.club],
       ['Location', opening.location],
-      ['Category', opening.category],
+      [categoryLabel, opening.category],
       ['Type', opening.type || opening.level],
       ['Pay', opening.pay],
       ['Timing', opening.when],
@@ -953,7 +1302,7 @@
               </div>
               <div class="apply-form__field">
                 <label class="apply-form__label" for="apply-resume">Résumé / CV <span class="apply-form__optional">(optional)</span></label>
-                <p class="apply-form__field-note">PDF or Word · demo only, file is not uploaded.</p>
+                <p class="apply-form__field-note">PDF or Word · optional. File is not uploaded; include links in your experience if needed.</p>
                 <input class="apply-form__input" id="apply-resume" name="resume" type="file" accept=".pdf,.doc,.docx" />
               </div>
             </section>
@@ -1007,39 +1356,185 @@
 
     const form = qs('#apply-form');
     const errorEl = qs('#apply-form-error');
-    form?.addEventListener('submit', (event) => {
+    const submitBtn = form?.querySelector('.apply-form__submit');
+
+    const radioValue = (name) => form.querySelector(`input[name="${name}"]:checked`)?.value || '';
+
+    form?.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (!form.checkValidity()) {
-        if (errorEl) errorEl.hidden = false;
+        if (errorEl) {
+          errorEl.hidden = false;
+          errorEl.textContent = 'Please complete all required fields before submitting.';
+        }
         form.reportValidity();
         return;
       }
-      const draft = {
-        kind: opening.kind,
-        title: opening.title,
-        club: opening.club,
-        matchId: opening.matchId,
-        roleId: opening.roleId,
-        clubJobId: opening.clubJobId,
-        jobId: opening.jobId,
-        firstName: form.firstName.value.trim(),
-        lastName: form.lastName.value.trim(),
-        email: form.email.value.trim(),
-        submittedAt: new Date().toISOString(),
+
+      if (errorEl) errorEl.hidden = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+      }
+
+      const firstName = form.firstName.value.trim();
+      const lastName = form.lastName.value.trim();
+      const email = form.email.value.trim();
+      const sourceLabel =
+        opening.kind === 'club'
+          ? 'MLS Careers · Club'
+          : opening.kind === 'match'
+            ? 'MLS Careers · Matchday'
+            : opening.kind === 'event'
+              ? 'MLS Careers · Event ops'
+              : 'MLS Careers';
+
+      const payload = {
+        firstName,
+        lastName,
+        email,
+        _replyto: email,
+        phone: form.phone.value.trim(),
+        city: form.city.value.trim(),
+        state: form.state.value.trim(),
+        experience: form.experience.value.trim(),
+        why: form.why.value.trim(),
+        workAuth: radioValue('workAuth'),
+        flexibleHours: radioValue('flexibleHours'),
+        canCommute: radioValue('canCommute'),
+        consent: form.consent.checked ? 'yes' : 'no',
+        source: sourceLabel,
+        role: opening.kind,
+        jobId: opening.eventJobId || opening.clubJobId || opening.jobId || opening.roleId || '',
+        matchId: opening.matchId || '',
+        jobTitle: opening.title,
+        jobLocation: opening.location,
+        jobOrg: opening.club,
+        jobCategory: opening.category,
+        jobPay: opening.pay,
+        jobType: opening.type || opening.level || '',
+        _subject: `${sourceLabel} Application: ${opening.title}`,
+        cv_url: 'not provided',
+        cover_letter_url: 'not provided',
+        document_url: 'not provided',
       };
-      localStorage.setItem('mw_last_application', JSON.stringify(draft));
+
+      try {
+        const response = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        let result = null;
+        try {
+          result = await response.json();
+        } catch {
+          result = null;
+        }
+
+        if (!response.ok) {
+          const codes = result?.errors?.map((entry) => entry.code).filter(Boolean) || [];
+          const fieldMessages =
+            result?.errors?.map((entry) => entry.message).filter(Boolean).join(' ') || '';
+          let message =
+            result?.error || fieldMessages || 'We could not submit your application. Please try again.';
+          if (response.status === 403 || codes.includes('FORBIDDEN') || /forbidden|origin/i.test(message)) {
+            message =
+              'This site domain is not allowed on the Formspree form yet. Add your GitHub Pages URL in Formspree → form settings → Allowed Domains, then try again.';
+          }
+          throw new Error(message);
+        }
+
+        const draft = {
+          kind: opening.kind,
+          title: opening.title,
+          club: opening.club,
+          matchId: opening.matchId,
+          roleId: opening.roleId,
+          clubJobId: opening.clubJobId,
+          eventJobId: opening.eventJobId,
+          jobId: opening.jobId,
+          firstName,
+          lastName,
+          email,
+          submittedAt: new Date().toISOString(),
+        };
+        localStorage.setItem('mw_last_application', JSON.stringify(draft));
+        location.href = 'thank-you.html';
+        return;
+      } catch (err) {
+        let message = err?.message || 'We could not submit your application. Please try again.';
+        if (/Failed to fetch|NetworkError|Load failed/i.test(message)) {
+          message =
+            'Could not reach Formspree. Check your connection, and confirm this site’s domain is allowed on form mdavpbew.';
+        }
+        if (errorEl) {
+          errorEl.hidden = false;
+          errorEl.textContent = message;
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit application';
+        }
+      }
+    });
+  }
+
+  function renderThankYou() {
+    const root = qs('#thank-you-content');
+    if (!root) return;
+
+    let draft = null;
+    try {
+      draft = JSON.parse(localStorage.getItem('mw_last_application') || 'null');
+    } catch {
+      draft = null;
+    }
+
+    const jobsHref =
+      draft?.kind === 'event'
+        ? 'jobs.html?tab=events'
+        : draft?.kind === 'club'
+          ? 'jobs.html?tab=club'
+          : 'jobs.html';
+
+    initFlowBack(jobsHref);
+    document.title = 'Thank you — Matchday Workforce';
+
+    if (!draft?.title) {
       root.innerHTML = `
         <div class="apply-shell apply-shell--single">
-          <div class="apply-panel apply-panel--message apply-panel--success">
-            <p class="apply-panel__eyebrow">Application submitted</p>
-            <h1 class="apply-panel__title">Thank you for applying</h1>
-            <p class="apply-panel__text">Your application for <strong>${opening.title}</strong> has been received.</p>
-            <p class="apply-panel__text">A confirmation note will be sent to <strong>${draft.email}</strong>. The hiring team will follow up with next steps.</p>
-            <a class="btn btn-primary" href="jobs.html">View more openings</a>
+          <div class="apply-panel apply-panel--message">
+            <h1 class="apply-panel__title">No application found</h1>
+            <p class="apply-panel__text">Apply for a role first, then you’ll land here after you submit.</p>
+            <a class="btn btn-primary" href="jobs.html">Browse jobs</a>
           </div>
         </div>`;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+      return;
+    }
+
+    const name = [draft.firstName, draft.lastName].filter(Boolean).join(' ');
+    const greeting = name ? `Thanks, ${name}.` : 'Thank you for applying.';
+
+    root.innerHTML = `
+      <div class="apply-shell apply-shell--single">
+        <div class="apply-panel apply-panel--message apply-panel--success">
+          <p class="apply-panel__eyebrow">Application submitted</p>
+          <h1 class="apply-panel__title">${greeting}</h1>
+          <p class="apply-panel__text">Your application for <strong>${draft.title}</strong> has been received.</p>
+          ${
+            draft.email
+              ? `<p class="apply-panel__text">A confirmation note will be sent to <strong>${draft.email}</strong>. The hiring team will follow up with next steps.</p>`
+              : `<p class="apply-panel__text">The hiring team will follow up with next steps by email.</p>`
+          }
+          <p class="thank-you-next">If you’re selected, your next-steps note will include a short onboarding checklist for any required work gear for <em>this role</em> before your first shift.</p>
+          <a class="btn btn-primary" href="${jobsHref}">View more openings</a>
+        </div>
+      </div>`;
   }
 
   function renderDashboard() {
@@ -1090,12 +1585,19 @@
   function renderEventsPage() {
     const list = qs('#events-list');
     const detail = qs('#event-detail');
+    const upcoming = MW.upcomingEvents();
     if (list) {
-      list.innerHTML = MW.events.map(eventItemHTML).join('');
+      list.innerHTML = upcoming.length
+        ? upcoming.map(eventItemHTML).join('')
+        : `<div class="empty">No upcoming hiring events right now.</div>`;
     }
     if (detail) {
-      const id = params.get('id') || MW.events[0].id;
-      const evt = MW.events.find((e) => e.id === id) || MW.events[0];
+      if (!upcoming.length) {
+        detail.innerHTML = `<div class="empty">No upcoming hiring events right now.</div>`;
+        return;
+      }
+      const id = params.get('id');
+      const evt = upcoming.find((e) => e.id === id) || upcoming[0];
       const s = MW.getStadium(evt.stadiumId);
       const md = monthDay(evt.date);
       detail.innerHTML = `
@@ -1165,14 +1667,34 @@
     const root = qs('#worker-assignment');
     if (!root) return;
     const s = MW.getStadium('providence-park');
-    const next = s.matches.find((m) => m.date >= '2026-08-11') || s.matches[0];
+    if (!s) {
+      root.innerHTML = `<div class="empty">Assignment unavailable.</div>`;
+      return;
+    }
+    const upcoming =
+      typeof MW.homeFixtures === 'function'
+        ? MW.homeFixtures(s.id)
+        : (s.matches || []).filter((m) => MW.isUpcomingDate?.(m.date) !== false);
+    const next = upcoming[0];
+    if (!next) {
+      root.innerHTML = `
+        <div class="assignment">
+          <p class="section-kicker" style="color:rgba(255,255,255,0.7)">Next match assignment</p>
+          <h2>No upcoming assignment</h2>
+          <p class="sub">${s.name} · check back for the next home matchday</p>
+        </div>`;
+      return;
+    }
+    const opponent = next.away || next.opponent || 'TBD';
+    const when = next.displayDate || formatDate(next.date) || next.date;
+    const kickoff = next.time || next.kickoff || 'TBD';
     root.innerHTML = `
       <div class="assignment">
         <p class="section-kicker" style="color:rgba(255,255,255,0.7)">Next match assignment</p>
         <h2>Guest Services — Section 112</h2>
-        <p class="sub">${s.name} · ${next.opponent} · ${next.displayDate || next.date}</p>
+        <p class="sub">${s.name} · vs ${opponent} · ${when}</p>
         <dl class="assignment-grid">
-          <div><dt>Kickoff</dt><dd>${next.kickoff}</dd></div>
+          <div><dt>Kickoff</dt><dd>${kickoff}</dd></div>
           <div><dt>Shift time</dt><dd>Arrive 90 min before kickoff</dd></div>
           <div><dt>Report to</dt><dd>${s.reportTo}</dd></div>
           <div><dt>Supervisor</dt><dd>Chris Alvarez · Gate D Lead</dd></div>
@@ -1231,6 +1753,7 @@
     renderStadiumPage();
     renderJobPage();
     renderApply();
+    renderThankYou();
     renderDashboard();
     renderEventsPage();
     renderTraining();
