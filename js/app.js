@@ -2,6 +2,9 @@
 (function () {
   const params = new URLSearchParams(window.location.search);
   const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnpagodq';
+  const EMAILJS_SERVICE_ID = 'service_qqu6dlk';
+  const EMAILJS_TEMPLATE_ID = 'template_som7doc';
+  const EMAILJS_PUBLIC_KEY = 'h_8DZt_Ej5jOjpLXm';
 
   function qs(sel, root = document) {
     return root.querySelector(sel);
@@ -1449,6 +1452,37 @@
               'This site domain is not allowed on the Formspree form yet. Add your GitHub Pages URL in Formspree → form settings → Allowed Domains, then try again.';
           }
           throw new Error(message);
+        }
+
+        // Branded confirmation email to the applicant (EmailJS template)
+        if (window.emailjs) {
+          try {
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+              firstName,
+              lastName,
+              email,
+              phone: payload.phone,
+              city: payload.city,
+              state: payload.state,
+              source: payload.source,
+              role: payload.role,
+              jobId: payload.jobId,
+              matchId: payload.matchId,
+              jobTitle: payload.jobTitle,
+              jobLocation: payload.jobLocation,
+              jobOrg: payload.jobOrg,
+              jobCategory: payload.jobCategory,
+              jobPay: payload.jobPay,
+              jobType: payload.jobType,
+              to_email: email,
+              to_name: firstName,
+              reply_to: email,
+            });
+          } catch (mailErr) {
+            console.warn('EmailJS confirmation failed:', mailErr);
+            // Application already saved via Formspree — continue to thank-you
+          }
         }
 
         const draft = {
