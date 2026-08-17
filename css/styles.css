@@ -1442,9 +1442,22 @@ ul { list-style: none; }
   margin-bottom: 0.25rem;
 }
 
-.match-hero p:last-child {
+.match-hero-when {
   color: rgba(255, 255, 255, 0.72);
   font-size: 0.85rem;
+}
+
+.match-hero-address {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.82rem;
+  margin-top: 0.35rem;
+  line-height: 1.35;
+}
+
+.venue-hero-address {
+  opacity: 0.9;
+  margin-top: 0.45rem;
+  font-size: 0.95rem;
 }
 
 .role-card,
@@ -2677,8 +2690,9 @@ ul { list-style: none; }
     font-size: 1.1rem;
   }
 
-  .match-hero p:last-child {
-    font-size: 0.8rem;
+  .match-hero-when,
+  .match-hero-address {
+    font-size: 0.78rem;
   }
 
   .role-card,

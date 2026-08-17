@@ -3656,4 +3656,6 @@ MW.eventJobs = [
   },
 ];
 
+if (typeof MW.applyUsaOnlyScope === 'function') MW.applyUsaOnlyScope();
+
 MW.getEventJob = (id) => (MW.eventJobs || []).find((j) => j.id === id || j.sourceId === String(id));

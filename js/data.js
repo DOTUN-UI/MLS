@@ -11,7 +11,6 @@ const MW = {
       cities: [
         { city: 'Portland', state: 'OR' },
         { city: 'Seattle', state: 'WA' },
-        { city: 'Vancouver', state: 'BC' },
       ],
     },
     {
@@ -56,15 +55,13 @@ const MW = {
       ],
     },
     {
-      label: 'Northeast & Canada',
+      label: 'Northeast',
       cities: [
         { city: 'Foxborough', state: 'MA' },
         { city: 'New York', state: 'NY' },
         { city: 'Harrison', state: 'NJ' },
         { city: 'Chester', state: 'PA' },
         { city: 'Washington', state: 'DC' },
-        { city: 'Toronto', state: 'ON' },
-        { city: 'Montreal', state: 'QC' },
       ],
     }
   ],
@@ -77,6 +74,7 @@ const MW = {
       club: 'Atlanta United FC',
       city: 'Atlanta',
       state: 'GA',
+      address: "1 AMB Drive NW, Atlanta, GA 30313",
       matches: [],
     },
     {
@@ -86,6 +84,7 @@ const MW = {
       club: 'Charlotte FC',
       city: 'Charlotte',
       state: 'NC',
+      address: "800 S Mint St, Charlotte, NC 28202",
       matches: [],
     },
     {
@@ -95,6 +94,7 @@ const MW = {
       club: 'Orlando City SC',
       city: 'Orlando',
       state: 'FL',
+      address: "655 W Church St, Orlando, FL 32805",
       matches: [],
     },
     {
@@ -104,6 +104,7 @@ const MW = {
       club: 'CF Montréal',
       city: 'Montreal',
       state: 'QC',
+      address: "4750 Rue Sherbrooke E, Montreal, QC H1V 3S8",
       matches: [],
     },
     {
@@ -113,6 +114,7 @@ const MW = {
       club: 'Toronto FC',
       city: 'Toronto',
       state: 'ON',
+      address: "170 Princes' Blvd, Toronto, ON M6K 3C3",
       matches: [],
     },
     {
@@ -122,6 +124,7 @@ const MW = {
       club: 'Houston Dynamo FC',
       city: 'Houston',
       state: 'TX',
+      address: "2200 Texas Ave, Houston, TX 77003",
       matches: [],
     },
     {
@@ -131,6 +134,7 @@ const MW = {
       club: 'Nashville SC',
       city: 'Nashville',
       state: 'TN',
+      address: "501 Benton Ave, Nashville, TN 37204",
       matches: [],
     },
     {
@@ -140,6 +144,7 @@ const MW = {
       club: 'Colorado Rapids',
       city: 'Commerce City',
       state: 'CO',
+      address: "6000 Victory Way, Commerce City, CO 80022",
       matches: [],
     },
     {
@@ -149,6 +154,7 @@ const MW = {
       club: 'Real Salt Lake',
       city: 'Sandy',
       state: 'UT',
+      address: "9256 S State St, Sandy, UT 84070",
       matches: [],
     },
     {
@@ -158,6 +164,7 @@ const MW = {
       club: 'LAFC',
       city: 'Los Angeles',
       state: 'CA',
+      address: "3939 S Figueroa St, Los Angeles, CA 90037",
       matches: [],
     },
     {
@@ -167,6 +174,7 @@ const MW = {
       club: 'San Jose Earthquakes',
       city: 'San Jose',
       state: 'CA',
+      address: "1123 Coleman Ave, San Jose, CA 95110",
       matches: [],
     },
     {
@@ -176,6 +184,7 @@ const MW = {
       club: 'Chicago Fire FC',
       city: 'Chicago',
       state: 'IL',
+      address: "1410 Museum Campus Dr, Chicago, IL 60605",
       matches: [],
     },
     {
@@ -185,6 +194,7 @@ const MW = {
       club: 'New York City FC',
       city: 'New York',
       state: 'NY',
+      address: "1 E 161st St, Bronx, NY 10451",
       matches: [],
     },
     {
@@ -194,6 +204,7 @@ const MW = {
       club: 'Austin FC',
       city: 'Austin',
       state: 'TX',
+      address: "10414 McKalla Place, Austin, TX 78758",
       matches: [],
     },
     {
@@ -203,6 +214,7 @@ const MW = {
       club: 'Seattle Sounders FC',
       city: 'Seattle',
       state: 'WA',
+      address: "800 Occidental Ave S, Seattle, WA 98134",
       matches: [],
     },
     {
@@ -212,6 +224,7 @@ const MW = {
       club: 'FC Cincinnati',
       city: 'Cincinnati',
       state: 'OH',
+      address: "1501 Central Pkwy, Cincinnati, OH 45214",
       matches: [],
     },
     {
@@ -221,6 +234,7 @@ const MW = {
       club: 'D.C. United',
       city: 'Washington',
       state: 'DC',
+      address: "100 Potomac Ave SW, Washington, DC 20024",
       matches: [],
     },
     {
@@ -230,6 +244,7 @@ const MW = {
       club: 'New York Red Bulls',
       city: 'Harrison',
       state: 'NJ',
+      address: "600 Cape May St, Harrison, NJ 07029",
       matches: [],
     },
     {
@@ -239,6 +254,7 @@ const MW = {
       club: 'Philadelphia Union',
       city: 'Chester',
       state: 'PA',
+      address: "1 Stadium Dr, Chester, PA 19013",
       matches: [],
     },
     {
@@ -248,6 +264,7 @@ const MW = {
       club: 'Columbus Crew',
       city: 'Columbus',
       state: 'OH',
+      address: "96 Columbus Crew Way, Columbus, OH 43215",
       matches: [],
     },
     {
@@ -257,6 +274,7 @@ const MW = {
       club: 'Sporting Kansas City',
       city: 'Kansas City',
       state: 'KS',
+      address: "1 Sporting Way, Kansas City, KS 66111",
       matches: [],
     },
     {
@@ -266,6 +284,7 @@ const MW = {
       club: 'Minnesota United FC',
       city: 'St. Paul',
       state: 'MN',
+      address: "400 Snelling Ave N, St. Paul, MN 55104",
       matches: [],
     },
     {
@@ -275,6 +294,7 @@ const MW = {
       club: 'LA Galaxy',
       city: 'Carson',
       state: 'CA',
+      address: "18400 Avalon Blvd, Carson, CA 90746",
       matches: [],
     },
     {
@@ -284,6 +304,7 @@ const MW = {
       club: 'Portland Timbers',
       city: 'Portland',
       state: 'OR',
+      address: "1844 SW Morrison St, Portland, OR 97205",
       matches: [],
     },
     {
@@ -293,6 +314,7 @@ const MW = {
       club: 'Vancouver Whitecaps FC',
       city: 'Vancouver',
       state: 'BC',
+      address: "777 Pacific Blvd, Vancouver, BC V6B 4Y8",
       matches: [],
     },
     {
@@ -302,6 +324,7 @@ const MW = {
       club: 'Inter Miami CF',
       city: 'Fort Lauderdale',
       state: 'FL',
+      address: "1350 NW 55th St, Fort Lauderdale, FL 33309",
       matches: [],
     },
     {
@@ -311,6 +334,7 @@ const MW = {
       club: 'Inter Miami CF',
       city: 'Miami',
       state: 'FL',
+      address: "1802 NW 37th Ave, Miami, FL 33125",
       matches: [],
     },
     {
@@ -320,6 +344,7 @@ const MW = {
       club: 'New England Revolution',
       city: 'Foxborough',
       state: 'MA',
+      address: "1 Patriot Pl, Foxborough, MA 02035",
       matches: [],
     },
     {
@@ -329,6 +354,7 @@ const MW = {
       club: 'St. Louis CITY SC',
       city: 'St. Louis',
       state: 'MO',
+      address: "2100 Market St, St. Louis, MO 63103",
       matches: [],
     },
     {
@@ -338,6 +364,7 @@ const MW = {
       club: 'San Diego FC',
       city: 'San Diego',
       state: 'CA',
+      address: "2101 Stadium Way, San Diego, CA 92108",
       matches: [],
     },
     {
@@ -347,6 +374,7 @@ const MW = {
       club: 'FC Dallas',
       city: 'Frisco',
       state: 'TX',
+      address: "9200 World Cup Way, Frisco, TX 75033",
       matches: [],
     }
   ],
@@ -2049,6 +2077,14 @@ MW.clubLogos = {
   'Vancouver Whitecaps FC': 'assets/clubLogo/VancouverWhitecapsFC.png',
 };
 
+/** Full venue line for hero / job detail (name + street address when available). */
+MW.formatStadiumLocation = (stadium = {}) => {
+  if (!stadium?.name) return '';
+  if (stadium.address) return `${stadium.name} · ${stadium.address}`;
+  const cityState = [stadium.city, stadium.state].filter(Boolean).join(', ');
+  return cityState ? `${stadium.name}, ${cityState}` : stadium.name;
+};
+
 MW.clubLogo = (name = '') => {
   const path = MW.clubLogos[name];
   if (!path) return '';
@@ -2068,3 +2104,38 @@ MW.clubInitials = (name = '') =>
     .map((w) => w[0])
     .join('')
     .toUpperCase() || 'MLS';
+
+/** Scope listings to USA for now. Flip to false to restore Canada / Mexico. */
+MW.usaOnly = true;
+MW.US_STATES = new Set([
+  'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN',
+  'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ',
+  'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA',
+  'WI', 'WV', 'WY',
+]);
+MW.NON_US_EVENT_CITIES = new Set([
+  'mexico city',
+  'guadalajara',
+  'monterrey',
+  'toronto',
+  'vancouver',
+  'montreal',
+  'montréal',
+]);
+
+MW.applyUsaOnlyScope = () => {
+  if (!MW.usaOnly) return;
+  MW.stadiums = (MW.stadiums || []).filter((s) => MW.US_STATES.has(s.state));
+  MW.clubJobs = (MW.clubJobs || []).filter((j) => MW.US_STATES.has(j.state));
+  if (Array.isArray(MW.fixtures)) {
+    const usStadiumIds = new Set(MW.stadiums.map((s) => s.id));
+    MW.fixtures = MW.fixtures.filter((f) => usStadiumIds.has(f.stadiumId));
+  }
+  if (Array.isArray(MW.eventJobs)) {
+    MW.eventJobs = MW.eventJobs.filter(
+      (j) => !MW.NON_US_EVENT_CITIES.has(String(j.city || '').trim().toLowerCase())
+    );
+  }
+};
+
+MW.applyUsaOnlyScope();

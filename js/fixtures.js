@@ -2021,3 +2021,5 @@ MW.fixtures = [
     openings: 15,
   },
 ];
+
+if (typeof MW.applyUsaOnlyScope === 'function') MW.applyUsaOnlyScope();

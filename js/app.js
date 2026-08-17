@@ -1,7 +1,7 @@
 /* Matchday Workforce — shared UI helpers */
 (function () {
   const params = new URLSearchParams(window.location.search);
-  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mdavpbew';
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnpagodq';
 
   function qs(sel, root = document) {
     return root.querySelector(sel);
@@ -620,6 +620,7 @@
       const img = stadiumImageURL(fixture.stadium);
       matchHero.classList.toggle('has-photo', Boolean(img));
       matchHero.style.backgroundImage = '';
+      const venueLine = MW.formatStadiumLocation(fixture.stadium);
       matchHero.innerHTML = `
         ${img ? `<img class="match-hero-bg" src="${img}" alt="" loading="eager" decoding="async" />` : ''}
         <div class="match-hero-date">
@@ -629,7 +630,8 @@
         <div>
           <p class="match-hero-kicker">Matchday hiring · ${fixture.stadium.name}</p>
           <h3>${fixture.home} <span>vs</span> ${fixture.away}</h3>
-          <p>${fixture.time} · ${fixture.stadium.name}, ${fixture.stadium.city}</p>
+          <p class="match-hero-when">${fixture.time} · ${fixture.stadium.city}, ${fixture.stadium.state}</p>
+          ${venueLine ? `<p class="match-hero-address">${venueLine}</p>` : ''}
         </div>
       `;
       const roles = filterMatchRoles(filters());
@@ -842,11 +844,11 @@
         <p class="section-kicker" style="color:rgba(255,255,255,0.75)">${s.club}</p>
         <h1>${s.name}</h1>
         <p style="opacity:0.85;margin-top:0.35rem">${s.city}, ${s.state}${s.capacity ? ` · Capacity ${s.capacity}` : ''}</p>
+        ${s.address ? `<p class="venue-hero-address">${s.address}</p>` : ''}
       </div>
       <div class="detail-layout">
         <div class="detail-main">
-          <p>${s.about}</p>
-          ${s.address ? `<p style="color:var(--muted);margin-top:0.75rem">${s.address}</p>` : ''}
+          <p>${s.about || ''}</p>
           <h2>Upcoming home matches</h2>
           <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.75rem">Upcoming 2026 home fixtures for this venue.</p>
           <div class="job-grid">
@@ -914,7 +916,7 @@
             summary: `${fixture.home} vs ${fixture.away}`,
             club: stadium.club,
             orgLabel: 'Club',
-            location: `${stadium.name}, ${stadium.city}, ${stadium.state}`,
+            location: MW.formatStadiumLocation(stadium),
             category: role.category,
             type: role.type,
             pay: role.payLabel,
@@ -939,7 +941,7 @@
           summary: `${fixture.home} vs ${fixture.away}`,
           club: stadium.club,
           orgLabel: 'Club',
-          location: `${stadium.name}, ${stadium.city}, ${stadium.state}`,
+          location: MW.formatStadiumLocation(stadium),
           category: role.category,
           type: role.type,
           pay: role.payLabel,
@@ -1055,7 +1057,7 @@
           summary: job.stadium.club,
           club: job.stadium.club,
           orgLabel: 'Club',
-          location: `${job.stadium.name}, ${job.stadium.city}, ${job.stadium.state}`,
+          location: MW.formatStadiumLocation(job.stadium),
           category: job.category,
           type: job.type,
           pay: job.payLabel,
@@ -1078,7 +1080,7 @@
         summary: job.stadium.club,
         club: job.stadium.club,
         orgLabel: 'Club',
-        location: `${job.stadium.name}, ${job.stadium.city}, ${job.stadium.state}`,
+        location: MW.formatStadiumLocation(job.stadium),
         category: job.category,
         type: job.type,
         pay: job.payLabel,
@@ -1470,7 +1472,7 @@
         let message = err?.message || 'We could not submit your application. Please try again.';
         if (/Failed to fetch|NetworkError|Load failed/i.test(message)) {
           message =
-            'Could not reach Formspree. Check your connection, and confirm this site’s domain is allowed on form mdavpbew.';
+            'Could not reach Formspree. Check your connection, and confirm this site’s domain is allowed on form xnpagodq.';
         }
         if (errorEl) {
           errorEl.hidden = false;
